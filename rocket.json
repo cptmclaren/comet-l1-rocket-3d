@@ -1,5 +1,5 @@
 {
- "name": "Comet L1 — “Rocket” (HP-H135W)",
+ "name": "Comet L1 — “Rocket” (H220T)",
  "units": "mm",
  "length": 1214.4,
  "r_out": 42.5,
@@ -15,7 +15,7 @@
  "fins": {
   "root": 117.475,
   "tip": 101.6,
-  "span": 95.25,
+  "span": 98.425,
   "sweep": 12.7,
   "t": 4.762,
   "tab_h": 25.645,
@@ -25,11 +25,11 @@
  },
  "joints": {
   "upper_middle": 604.8,
-  "middle_lower": 935.0
+  "middle_lower": 922.3
  },
- "cg_launch": 802.7,
- "cg_burnout": 782.8,
- "cp": 945.1,
+ "cg_launch": 816.1,
+ "cg_burnout": 789.6,
+ "cp": 952.8,
  "stats": [
   [
    "Length",
@@ -41,23 +41,23 @@
   ],
   [
    "Mass (launch)",
-   "1.333 kg"
+   "1.231 kg"
   ],
   [
    "Motor",
-   "AeroTech HP-H135W-14A, delay 8 s"
+   "AeroTech H220T-14A, delay 10 s"
   ],
   [
    "CG / CP",
-   "31.60 / 37.21 in"
+   "32.13 / 37.51 in"
   ],
   [
    "Stability",
-   "1.675 → 1.909 cal"
+   "1.609 → 1.92 cal"
   ],
   [
    "Target apogee",
-   "2,000 ft (RocketPy)"
+   "1,984 ft predicted"
   ],
   [
    "Descent",
@@ -130,22 +130,6 @@
    "how": "Drill them clean, away from the nose shoulder and joints. They are small enough not to weaken the tube."
   },
   {
-   "id": "ballastA",
-   "name": "Ballast bay A",
-   "group": "upper",
-   "kind": "ballast",
-   "st": [
-    595.6,
-    625.6
-   ],
-   "mass": 91.2,
-   "material": "Steel washers on a bolt",
-   "color": "#7d8a99",
-   "what": "Removable steel washers on the forward face of the bulkhead, inside coupler 1.",
-   "why": "Fine-tunes the apogee to the 2,000 ft target on launch day. Together with bay B the weight is split 69 : 31, so the CG (and stability) doesn't move.",
-   "how": "Washers on a bolt through the bulkhead with a lock nut. The bulkhead carries their inertia (≈13 g × 91 g ≈ 12 N), far below what 1/4 in birch can take."
-  },
-  {
    "id": "cpl1",
    "name": "Coupler 1 — separation joint",
    "group": "upper",
@@ -216,12 +200,12 @@
    "kind": "tube",
    "st": [
     604.8,
-    935.0
+    922.3
    ],
-   "mass": 80.0,
+   "mass": 76.9,
    "material": "Cardboard, 85 mm OD, 1.355 mm wall",
    "color": "#d8d2c4",
-   "what": "13.000 in body tube: the recovery bay.",
+   "what": "12 1/2 in body tube: the recovery bay.",
    "why": "Holds the parachute, Nomex and shock cord. With the bulkhead in front and the motor's forward closure behind, it is the pressure vessel the ejection charge fills.",
    "how": "Coupler 1 slides into its front (separation joint); coupler 2 is screwed into its back (access joint). The forward rail button is screwed through it 30 mm from its aft end."
   },
@@ -279,14 +263,14 @@
    "group": "lower",
    "kind": "tube",
    "st": [
-    884.2,
-    985.8
+    871.5,
+    973.1
    ],
    "mass": 26.3,
    "material": "Cardboard coupler, 82.3 mm OD",
    "color": "#c9a46b",
    "what": "4 in coupler: 2 in epoxied into the fin can, 2 in into the middle tube.",
-   "why": "Lets you open the rocket just above the fin can to reach the I-hook, ballast bay B and the shock-cord attachment without cutting anything.",
+   "why": "Lets you open the rocket just above the fin can to reach the I-hook and the shock-cord attachment without cutting anything.",
    "how": "Bonded to the lower tube and held in the middle tube with screws (it does NOT separate in flight). It sits 2.1 in above the forward centering ring, as the club recommends."
   },
   {
@@ -295,13 +279,13 @@
    "group": "lower",
    "kind": "tube",
    "st": [
-    935.0,
+    922.3,
     1214.4
    ],
-   "mass": 67.7,
+   "mass": 70.7,
    "material": "Cardboard, 85 mm OD, 1.355 mm wall",
    "color": "#d8d2c4",
-   "what": "11.000 in body tube carrying the motor mount and fins.",
+   "what": "11 1/2 in body tube carrying the motor mount and fins.",
    "why": "The strongest, heaviest section: it takes the motor thrust and the fin loads.",
    "how": "Three slots let the fin tabs pass through the wall to the motor tube. The aft rail button screws through the wall into a backing block, 20 mm from the aft end."
   },
@@ -311,8 +295,8 @@
    "group": "lower",
    "kind": "ihook",
    "st": [
-    955.8,
-    975.8
+    943.1,
+    963.1
    ],
    "mass": 30.0,
    "material": "Steel",
@@ -322,35 +306,19 @@
    "how": "Nut + washer on each side of the centering ring, epoxied. The ring is bonded to both the motor tube and the body tube, so the load spreads into the whole fin can."
   },
   {
-   "id": "ballastB",
-   "name": "Ballast bay B",
-   "group": "lower",
-   "kind": "ballastB",
-   "st": [
-    966.8,
-    981.8
-   ],
-   "mass": 40.8,
-   "material": "Steel washers on 2 bolts",
-   "color": "#7d8a99",
-   "what": "Removable washers on the forward face of the forward centering ring.",
-   "why": "The other 31 % of the launch-day ballast. Because it sits behind the CG and bay A sits in front, adding both in a 69 : 31 ratio keeps stability unchanged.",
-   "how": "Two bolts through the centering ring with lock nuts; reach them through coupler 2."
-  },
-  {
    "id": "crF",
    "name": "Centering ring — forward",
    "group": "lower",
    "kind": "ring",
    "st": [
-    988.63,
-    991.8
+    975.93,
+    979.1
    ],
    "mass": 9.1,
    "material": "Birch plywood 1/8 in",
    "color": "#e2c48e",
    "what": "Birch ring centring the motor tube at its front end.",
-   "why": "Holds the motor tube concentric and carries the I-hook load and ballast B.",
+   "why": "Holds the motor tube concentric and carries the I-hook load.",
    "how": "Epoxied to the motor tube and the body tube, with fillets on the forward face."
   },
   {
@@ -359,13 +327,13 @@
    "group": "lower",
    "kind": "tube",
    "st": [
-    985.8,
+    973.1,
     1214.4
    ],
-   "mass": 14.7,
-   "material": "Cardboard, 31 mm OD / 29 mm ID, 9 in",
+   "mass": 15.5,
+   "material": "Cardboard, 31 mm OD / 29 mm ID, 9 1/2 in",
    "color": "#c9a46b",
-   "what": "9 in inner tube the 29 mm motor slides into.",
+   "what": "9 1/2 in inner tube the 29 mm motor slides into (fits the 238 mm H220T).",
    "why": "Transfers the motor's thrust into the airframe.",
    "how": "Bonded to all three centering rings and to the fin tabs (through-the-wall), so thrust goes motor → retainer & thrust ring → motor tube → rings & fins → body tube."
   },
@@ -394,11 +362,11 @@
     1096.93,
     1214.4
    ],
-   "mass": 116.4,
+   "mass": 119.5,
    "material": "Birch plywood 3/16 in, rounded edges",
    "color": "#d9b56e",
-   "what": "Three trapezoidal fins at 120°: root 4.625 in, tip 4.000 in, span 3.75 in, sweep 0.50 in.",
-   "why": "Moves the centre of pressure aft to 37.21 in, giving 1.67–1.91 calibers of stability (club range 1.5–2.0). Flutter margin ≈1.9 (3/16 in birch).",
+   "what": "Three trapezoidal fins at 120°: root 4 5/8 in, tip 4 in, span 3 7/8 in, sweep 1/2 in; tab 1/4 in from the leading edge, 4 in long.",
+   "why": "Moves the centre of pressure aft to 37.21 in, giving 1.6–1.9 calibers of stability with the H220T (club range 1.5–2.0). Flutter margin 1.8 (3/16 in birch).",
    "how": "Each tab passes through a slot in the tube and is epoxied to the motor tube between the mid and aft centering rings, with fillets inside and outside. The tab, not the outer fillet, takes the landing loads."
   },
   {
@@ -455,8 +423,8 @@
    "group": "middle",
    "kind": "button",
    "st": [
-    905.0,
-    905.0
+    892.3,
+    892.3
    ],
    "mass": 0.8,
    "material": "Delrin (1010 shown)",
@@ -483,19 +451,19 @@
   },
   {
    "id": "motor",
-   "name": "Motor — AeroTech HP-H135W-14A",
+   "name": "Motor — AeroTech H220T-14A (RMS)",
    "group": "motor",
    "kind": "motor",
    "st": [
-    998.4,
+    976.4,
     1214.4
    ],
-   "mass": 212.0,
-   "material": "Single-use (DMS) composite motor, 29 × 216 mm",
+   "mass": 246.0,
+   "material": "Reloadable motor in a 29/240 case, 29 × 238 mm",
    "color": "#5b6470",
-   "what": "H-class motor: 229 N·s total impulse, 116 N average thrust, ~2 s burn, White Lightning propellant.",
-   "why": "The team's chosen motor. Its delay is drilled from 14 s to 8 s so the ejection charge fires ~0.5 s before apogee.",
-   "how": "Slides into the motor tube; its aft thrust ring bears on the motor tube end and the retainer cap holds it in."
+   "what": "H-class reload: 207 N·s total impulse, 231 N average thrust, ~0.9 s burn, Blue Thunder propellant.",
+   "why": "Lands right on the 2,000 ft target without any ballast. Delay set to 10 s (drilled from 14 s by the leads), firing about 1 s after apogee.",
+   "how": "The reload is assembled into the 29/240 case and slid into the 9 1/2 in motor tube; the aft thrust ring bears on the tube end and the retainer cap holds it in."
   }
  ]
 }

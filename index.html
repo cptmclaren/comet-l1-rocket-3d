@@ -238,8 +238,8 @@ add('bulkhead', new THREE.Mesh(disk(R.cpl_r_in - 0.05, ...st('bulkhead')), mat(c
   add('avionics', ...meshes);
 }
 
-// ballast A: bolt through the bulkhead, spacer, washer stack
-{
+// ballast A (only if the design has it)
+if (PART.ballastA) {
   const [a, b] = st('ballastA'), bh = st('bulkhead'), meshes = [];
   const bolt = new THREE.Mesh(new THREE.CylinderGeometry(3.2, 3.2, bh[1] + 8 - (a - 6), 16), metal('#8f979f'));
   bolt.rotation.z = Math.PI / 2; bolt.position.set((a - 6 + bh[1] + 8) / 2, 0, 0); meshes.push(bolt);
@@ -300,8 +300,8 @@ add('bulkhead', new THREE.Mesh(disk(R.cpl_r_in - 0.05, ...st('bulkhead')), mat(c
   for (const x of [cr[0] - 2, cr[1] + 2]) { const nut = new THREE.Mesh(new THREE.CylinderGeometry(4.6, 4.6, 3.5, 6), metal('#aab1b9')); nut.rotation.z = Math.PI / 2; nut.position.set(x, 0, 0); meshes.push(nut); }
   add('ihook', ...meshes);
 }
-// ballast B: washers on two bolts through the forward centering ring
-{
+// ballast B (only if the design has it)
+if (PART.ballastB) {
   const [a, b] = st('ballastB'), cr = st('crF'), meshes = [];
   for (const y of [24, -24]) {
     const bolt = new THREE.Mesh(new THREE.CylinderGeometry(2.6, 2.6, cr[1] + 6 - (a - 5), 12), metal('#8f979f')); bolt.rotation.z = Math.PI / 2; bolt.position.set((a - 5 + cr[1] + 6) / 2, y, 0); meshes.push(bolt);
