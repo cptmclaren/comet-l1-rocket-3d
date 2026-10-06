@@ -19,16 +19,16 @@
   "sweep": 12.7,
   "t": 4.762,
   "tab_h": 25.645,
-  "tab_l": 103.475,
-  "tab_off": 6.0,
+  "tab_l": 101.6,
+  "tab_off": 6.35,
   "count": 3
  },
  "joints": {
   "upper_middle": 604.8,
   "middle_lower": 935.0
  },
- "cg_launch": 802.8,
- "cg_burnout": 782.9,
+ "cg_launch": 802.7,
+ "cg_burnout": 782.8,
  "cp": 945.1,
  "stats": [
   [
@@ -49,11 +49,11 @@
   ],
   [
    "CG / CP",
-   "31.61 / 37.21 in"
+   "31.60 / 37.21 in"
   ],
   [
    "Stability",
-   "1.674 → 1.908 cal"
+   "1.675 → 1.909 cal"
   ],
   [
    "Target apogee",
@@ -394,7 +394,7 @@
     1096.93,
     1214.4
    ],
-   "mass": 116.9,
+   "mass": 116.4,
    "material": "Birch plywood 3/16 in, rounded edges",
    "color": "#d9b56e",
    "what": "Three trapezoidal fins at 120°: root 4.625 in, tip 4.000 in, span 3.75 in, sweep 0.50 in.",
