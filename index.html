@@ -230,57 +230,64 @@ function makeNote(id) {
 const badgeText = id => id === 'avionics' ? 'sled printed · electronics bought' : MADE[id] === 'print' ? '3D printed' : 'not printed · ' + ({cut: 'cut to size', buy: 'bought', epoxy: 'epoxy'})[MADE[id] || 'buy'];
 const stat = k => (R.stats.find(s => s[0] === k) || [0, '—'])[1];
 
+const MOUNT = ['mmt', 'crF', 'ihook', 'crM', 'crA'], EBAY = ['cpl1', 'bulkhead', 'ubolt', 'upper', 'ports', 'avionics'];
 const STEPS = [
   {t: 'Sort your parts: what gets printed?', from: 'fade', overview: true,
-   text: 'This is the finished rocket colour-coded by how each part is made. Only two parts come off the 3D printer — the nose cone and the avionics sled. The rest is cut cardboard, cut birch plywood, bought hardware, or epoxy. Step through to see the order they go together.',
+   text: 'This is the finished rocket colour-coded by how each part is made. Only two parts come off the 3D printer: the nose cone and the avionics sled. The rest is cut cardboard, cut birch plywood, bought hardware, or epoxy. Step through to see the order a real build goes in, including what gets built off the rocket and joined later.',
    tip: 'Orange = printed. Yellow = cut/drilled from stock. Blue = bought. Purple = epoxy.'},
-  {t: 'Motor-mount tube', ids: ['mmt'], from: 'aft', d: 360,
-   text: 'Cut the 29 mm motor-mount tube to 9½ in (241.3 mm) and sand the ends square. Everything that holds the fin can together is built on this tube — thrust travels motor → tube → rings and fins → body.',
+  {t: 'Motor-mount tube', ids: ['mmt'], from: 'fade',
+   text: 'The fin-can core is built on the bench, outside the body tube. Cut the 29 mm motor-mount tube to 9½ in (241.3 mm) and sand the ends square. Thrust travels motor → tube → rings and fins → body.',
    tip: 'Dry-fit your motor case in it before anything is glued.'},
-  {t: 'Forward ring + I-hook', ids: ['ihook', 'crF'], from: 'fore', d: 260,
+  {t: 'Forward ring + I-hook', ids: ['ihook', 'crF'], from: 'fore', d: 200,
    text: 'Pass the I-hook through the forward centering ring, put a nut and washer on each side, and epoxy it. Then epoxy the ring on the motor tube near its forward end. The recovery cord clips to this hook, so this joint takes the parachute shock.',
    tip: 'The eye of the hook faces forward, toward the nose.'},
-  {t: 'Mid + aft centering rings', ids: ['crM', 'crA'], from: 'aft', d: 320,
-   text: 'Epoxy the mid ring and the aft ring on the motor tube. The fin tabs will sit between these two rings, so use the fin slots in the body tube as your guide for the spacing. Keep both rings square to the tube.',
-   tip: 'All three rings are 1/8 in birch plywood.'},
-  {t: 'Fit the mount into the fin can', ids: ['lower'], from: 'fore', d: 420,
-   text: 'Epoxy the edge of each ring and slide the motor mount into the lower body tube until the aft ends of the mount and the tube are flush. Line the three fin slots up with the space between the mid and aft rings. (Shown as the tube sliding over the mount; in your hands you push the mount in.)',
-   tip: 'Do a dry run first. Epoxy gets stubborn fast.'},
+  {t: 'Mid + aft centering rings', ids: ['crM', 'crA'], from: 'aft', d: 220,
+   text: 'Epoxy the mid ring and the aft ring on the motor tube. The fin tabs will sit between these two rings, so use the fin slots you will cut in the body tube as the guide for spacing. Keep both rings square to the tube.',
+   tip: 'All three rings are 1/8 in birch plywood. Let the epoxy cure before the next step.'},
+  {t: 'Fin-can body tube', ids: ['lower'], from: 'fade', focus: [880, 1660],
+   text: 'Cut the lower body tube to 11½ in and cut the three fin slots at 120°, sized for the fin tabs. This is the tube the finished mount will go into; for now it just sits beside the mount.',
+   tip: 'Mark the slot positions from the mid and aft ring locations.'},
+  {t: 'Insert the mount into the fin can', ids: [], chips: MOUNT, focus: [900, 1214], unstage: 'mount',
+   text: 'Epoxy the outer edge of each ring and push the whole motor mount into the tube from the aft end until the aft ends are flush. Line the three slots up with the space between the mid and aft rings.',
+   tip: 'Do a dry run first. Epoxy sets before you can fix a crooked ring.'},
   {t: 'Fins ×3, through-the-wall', ids: ['fins'], from: 'radial', d: 230,
    text: 'Push each birch fin tab through its slot until it butts the motor tube, and epoxy the tab to the tube between the mid and aft rings. Keep the three fins 120° apart and square to the tube while the epoxy tacks. The tab, not the outside fillet, takes the landing loads.',
-   tip: 'A printed or cardboard jig that holds the fins at 120° makes this much easier.'},
+   tip: 'A jig that holds the fins at 120° makes this much easier.'},
   {t: 'Epoxy fillets', ids: ['fillets'], from: 'radial', d: 24,
    text: 'Once the fins are tacked in, run epoxy fillets along both sides of every fin root, inside and outside the tube. Mask the tube for neat lines. Let it fully cure before moving on.',
-   tip: 'Epoxy is the only “part” here that is made on the spot — nothing to print or buy as a shape.'},
+   tip: 'Epoxy is the only "part" here that is made on the spot, with no shape to print or buy.'},
   {t: 'Motor retainer + aft rail button', ids: ['retainer', 'btnA'], from: 'aft', d: 220, s: {btnA: [0, -130]},
    text: 'Epoxy (or JB-Weld) the body of the aluminum 29 mm retainer onto the aft end of the motor tube; its cap screws on over the motor later. Glue a small backing block inside the fin can between fins 2 and 3, then screw the aft rail button into it, 20 mm from the aft end.',
    tip: 'Rail buttons are bought Delrin hardware.'},
-  {t: 'Coupler 2 (access joint)', ids: ['cpl2'], from: 'fore', d: 340,
-   text: 'Bond coupler 2 half-way into the forward end of the fin can. It stays with the fin can and never separates in flight; the middle tube will be screwed onto it.',
+  {t: 'Coupler 2 (access joint)', ids: ['cpl2'], from: 'fore', d: 300,
+   text: 'Bond coupler 2 half-way into the forward end of the fin can. It stays with the fin can and never separates in flight; the middle tube is screwed onto it next.',
    tip: 'Cut from cardboard coupler stock, 4 in long.'},
-  {t: 'Middle tube + forward rail button', ids: ['middle', 'btnF'], from: 'fore', d: 420, s: {btnF: [0, -130]},
-   text: 'Slide the recovery-bay tube over the free half of coupler 2 and fasten it with screws (the access joint). Screw the forward rail button through the wall 30 mm from the aft end of this tube, with a backing plate inside.',
-   tip: 'The access joint lets you reach the recovery bay and the cord without un-gluing anything.'},
-  {t: 'Coupler 1 + bulkhead + U-bolt', ids: ['cpl1', 'bulkhead', 'ubolt'], from: 'fore', d: 380,
-   text: 'Epoxy the birch bulkhead into the far end of coupler 1 with fillets on both faces. Pass the steel U-bolt through the bulkhead, with two nuts and washers on the forward face, and clip its quick link on. The parachute’s opening shock goes U-bolt → bulkhead → coupler → upper tube.',
-   tip: 'Coupler 1 slides into the middle tube as the separation joint — friction fit or 2 nylon shear pins.'},
-  {t: 'Upper tube (E-bay) + static ports', ids: ['upper', 'ports'], from: 'fore', d: 420,
+  {t: 'Middle tube + forward rail button', ids: ['middle', 'btnF'], from: 'fore', d: 360, s: {btnF: [0, -130]},
+   text: 'Slide the recovery-bay tube over the free half of coupler 2 and fasten it with screws (the access joint). Screw the forward rail button through the wall 30 mm from the aft end of this tube, with a backing plate inside. The front of this tube is now open, and that matters for the next steps.',
+   tip: 'The access joint lets you reach the recovery bay without un-gluing anything.'},
+  {t: 'Shock cord onto the I-hook', ids: ['cord'], from: 'fore', d: 260,
+   text: 'Feed the 15 ft Kevlar shock cord in through the open front of the middle tube and clip its aft end to the I-hook quick link. Do this now: once the upper section is joined, you can no longer reach the I-hook. Leave the other end hanging out the front.',
+   tip: 'The load path to the fin can is cord → I-hook → centering ring → motor tube and body tube.'},
+  {t: 'E-bay: coupler 1 + bulkhead + U-bolt', ids: ['cpl1', 'bulkhead', 'ubolt'], from: 'fade',
+   text: 'The upper section is built off the rocket (shown pulled forward). Epoxy the birch bulkhead into the far end of coupler 1 with fillets on both faces. Pass the steel U-bolt through the bulkhead, with two nuts and washers on the forward face, and clip its quick link on. The chute\'s opening shock goes U-bolt → bulkhead → coupler → upper tube.',
+   tip: 'Coupler 1 will slide into the middle tube as the separation joint.'},
+  {t: 'E-bay: upper tube + static ports', ids: ['upper', 'ports'], from: 'fade',
    text: 'Epoxy coupler 1 into the aft end of the upper body tube. Drill three clean 1/8 in static ports at 60°, 180° and 300° (station 16.5 in) so outside air pressure can reach the barometer, plus a hole for the avionics switch.',
    tip: 'Keep the ports clear of the nose shoulder and the joints.'},
-  {t: 'Avionics sled', ids: ['avionics'], from: 'fore', d: 300,
-   text: 'Print the sled in PLA, then mount the ESP-32, BMP-280, microSD module, 9 V battery and switch on it. Slide it onto two threaded rods anchored in the bulkhead so it cannot move under boost. Use an alkaline or metal-cased Li-ion 9 V — not a LiPo.',
-   tip: 'This is one of only two printed parts. The boards and battery are bought.'},
-  {t: 'Shock cord + swivel', ids: ['cord', 'swivel'], from: 'fore', d: 260,
-   text: 'Z-fold the 15 ft Kevlar shock cord. Tie or clip its aft end to the I-hook quick link and its forward end to the U-bolt quick link. Clip the swivel to the U-bolt quick link; the parachute bridle goes on its other end.',
-   tip: 'The load path to the fin can is cord → I-hook → centering ring → motor tube and body tube.'},
-  {t: 'Parachute + Nomex', ids: ['chute', 'nomex'], from: 'fore', d: 240,
-   text: 'Fold the 42 in ripstop-nylon chute and burrito-wrap it in the Nomex blanket with the open side facing forward. Tie the Nomex to the shock cord so it can’t fly away. Pack it all loosely in the recovery bay.',
+  {t: 'E-bay: avionics sled', ids: ['avionics'], from: 'fore', d: 300,
+   text: 'Print the sled in PLA, then mount the ESP-32, BMP-280, microSD module, 9 V battery and switch on it. Slide it onto the two threaded rods anchored in the bulkhead, in through the open nose end of the upper tube, so it cannot move under boost. Use an alkaline or metal-cased Li-ion 9 V, not a LiPo.',
+   tip: 'One of only two printed parts. The boards and battery are bought.'},
+  {t: 'Connect cord, swivel; pack the parachute', ids: ['swivel', 'chute', 'nomex'], from: 'fore', d: 220,
+   text: 'Clip the free end of the shock cord to the U-bolt quick link on the E-bay and clip the swivel there too; the chute bridle goes on the swivel\'s other end. Z-fold the cord, burrito-wrap the 42 in ripstop-nylon chute in the Nomex with the open side facing forward, tie the Nomex to the cord, and pack it into the middle tube through its open front.',
    tip: 'Pack loose enough that the ejection gas can push it out.'},
+  {t: 'Join the sections (separation joint)', ids: [], chips: EBAY, focus: [380, 900], unstage: 'ebay',
+   text: 'Slide coupler 1 into the front of the middle tube, folding the cord and chute in ahead of it. It should be a snug friction fit, or use 2 nylon shear pins. Pop-test it on the ground before flying.',
+   tip: 'This is why the recovery gear goes in first: after this joint is closed you cannot reach it.'},
   {t: 'Nose cone', ids: ['nose'], from: 'fore', d: 380,
    text: 'Slide the printed nose-cone shoulder into the upper tube and add two small screws through the tube wall (suggested). It comes off to reach the avionics, and it never separates in flight.',
    tip: 'The other printed part. Von Kármán shape, PLA, 1.6 mm wall.'},
   {t: 'Install motor + final check', ids: ['motor'], from: 'aft', d: 360, final: true,
-   text: 'Assemble the AeroTech reload in its 29/240 case, slide it into the motor tube so the thrust ring sits on the tube end, and screw the retainer cap on. The CG / CP markers are back on: stability ' + stat('Stability') + ' cal at a launch mass of ' + stat('Mass (launch)') + ' (club limits: 1.5–2.0 cal, 1000–1250 g).',
+   text: 'At the pad, assemble the AeroTech reload in its 29/240 case, slide it into the motor tube so the thrust ring sits on the tube end, and screw the retainer cap on. The CG / CP markers are back on: stability ' + stat('Stability') + ' cal at a launch mass of ' + stat('Mass (launch)') + ' (club limits: 1.5–2.0 cal, 1000–1250 g).',
    tip: 'Try the 🔥 Motor burn and 💨 Ejection charge buttons now to see it work.'},
 ];
 const stepOf = {};
@@ -292,6 +299,14 @@ STEPS.forEach(s => s.ids.forEach(id => {
 }));
 const RADIAL = {};   // radial slide-in distance per part (fins go in through the wall)
 STEPS.forEach(s => { if (s.from === 'radial') s.ids.forEach(id => RADIAL[id] = s.d); });
+// sub-assemblies that are built off the rocket and moved into place later: id -> {dx, until step}
+const STAGE = {};
+{
+  const until = k => STEPS.findIndex(s => s.unstage === k);
+  MOUNT.forEach(id => STAGE[id] = {dx: 440, until: until('mount')});     // motor mount is built beside the tube, then pushed in
+  EBAY.forEach(id => STAGE[id] = {dx: -520, until: until('ebay')});      // E-bay is built off the rocket, then joined after the chute is packed
+}
+const stagedDx = (id, k) => STAGE[id] && k > 0 && k < STAGE[id].until ? STAGE[id].dx : 0;
 
 // ---------- renderer / scene ----------
 const app = document.getElementById('app');
@@ -575,8 +590,8 @@ const EXPLODE = {nose: [-260, 0], upper: [-170, 0], recovery: [-40, 150], middle
 const EJECT = {nose: [-340, 0], upper: [-340, 0], recovery: [-170, 70], middle: [0, 0], lower: [0, 0], motor: [0, 0]};
 let mode = 'explode', amount = 0, anim = null;
 const build = {on: false, step: 0, play: false, playT: 0, prevTint: false};
-const reveal = {}, target = {};                      // build-mode fade/slide progress per part (0 hidden .. 1 fully installed)
-for (const id of Object.keys(partGroups)) reveal[id] = target[id] = 1;
+const reveal = {}, target = {}, stageAmt = {}, stageTgt = {};                      // build-mode fade/slide progress per part (0 hidden .. 1 fully installed)
+for (const id of Object.keys(partGroups)) { reveal[id] = target[id] = 1; stageAmt[id] = stageTgt[id] = 0; }
 const easeOut = k => 1 - Math.pow(1 - k, 3);
 const jitter = {x: 0, y: 0, z: 0};
 function applyOffsets() {
@@ -587,6 +602,7 @@ function applyOffsets() {
     const r = reveal[id], k = 1 - easeOut(r);
     const sl = slideOf[id];
     if (r < 1 && sl) { dx += sl[0] * k; dy += sl[1] * k; }
+    if (STAGE[id] && stageAmt[id] > 0) { const a = stageAmt[id]; dx += STAGE[id].dx * a * a * (3 - 2 * a); }
     g.position.set(dx, dy, 0);
     g.visible = r > 0.004;
     if (RADIAL[id]) g.children.forEach(m => { const a = m.rotation.x; m.position.set(0, Math.cos(a) * RADIAL[id] * k, Math.sin(a) * RADIAL[id] * k); });
@@ -601,7 +617,7 @@ function refreshPart(id) {
   const g = partGroups[id]; if (!g) return;
   const op = 1 - $('opacity').value / 100;
   const cut = $('cut').checked, iso = $('isolate').checked, tint = $('tint').checked;
-  const isNew = build.on && build.step > 0 && STEPS[build.step].ids.includes(id);
+  const isNew = build.on && build.step > 0 && (STEPS[build.step].chips || STEPS[build.step].ids).includes(id);
   const rv = Math.min(1, reveal[id] * 2.2);
   g.traverse(m => {
     if (!m.isMesh) return; const M = m.material, base = M.userData.base;
@@ -756,7 +772,7 @@ addEventListener('resize', () => {
 
 // ---------- BUILD MODE ----------
 $('legend').innerHTML = Object.entries(MAKE).map(([k, v]) => `<span><i style="background:${v.color}"></i>${v.label.split(' — ')[0]}</span>`).join('');
-$('bDots').innerHTML = STEPS.map((s, i) => `<button title="${i}. ${s.t}" data-i="${i}" class="${s.ids.some(id => MADE[id] === 'print') ? 'pr' : ''}"></button>`).join('');
+$('bDots').innerHTML = STEPS.map((s, i) => `<button title="${i}. ${s.t}" data-i="${i}" class="${(s.chips || s.ids).some(id => MADE[id] === 'print') ? 'pr' : ''}"></button>`).join('');
 $('bDots').querySelectorAll('button').forEach(b => b.onclick = () => { build.play = false; setStep(+b.dataset.i); });
 const printLabels = [];
 for (const id of Object.keys(partGroups)) if (MADE[id] === 'print') {
@@ -766,8 +782,10 @@ for (const id of Object.keys(partGroups)) if (MADE[id] === 'print') {
 }
 function stepFocus(i) {
   const S = STEPS[i];
-  if (!S.ids.length) return view('fit');
-  let lo = 1e9, hi = -1e9; S.ids.forEach(id => { lo = Math.min(lo, PART[id].st[0]); hi = Math.max(hi, PART[id].st[1]); });
+  let lo = 1e9, hi = -1e9;
+  if (S.focus) { lo = S.focus[0]; hi = S.focus[1]; }
+  else if (!S.ids.length) return view('fit');
+  else S.ids.forEach(id => { const g = stagedDx(id, i); lo = Math.min(lo, PART[id].st[0] + g); hi = Math.max(hi, PART[id].st[1] + g); });
   const span = Math.max(hi - lo, 120) * 1.5, c = new THREE.Vector3((lo + hi) / 2 - L / 2, 0, 0);
   const dir = camera.position.clone().sub(controls.target).normalize();
   const dist = Math.min(Math.max(span * 2.1, 700), fitDist() * 1.1);
@@ -778,7 +796,7 @@ function renderStepUI() {
   const S = STEPS[build.step], n = STEPS.length - 1;
   $('bStep').textContent = build.step === 0 ? 'Overview' : `Step ${build.step} / ${n}`;
   $('bTitle').textContent = S.t; $('bText').textContent = S.text; $('bTip').textContent = S.tip || '';
-  const ids = S.overview ? Object.keys(partGroups).filter(id => MADE[id] === 'print') : S.ids;
+  const ids = S.overview ? Object.keys(partGroups).filter(id => MADE[id] === 'print') : (S.chips || S.ids).filter(id => PART[id]);
   $('bChips').innerHTML = ids.map(id => { const pr = MADE[id] === 'print';
     return `<button class="chip ${pr ? 'pr' : 'np'}" data-id="${id}"><i style="background:${MAKE[MADE[id] || 'buy'].color}"></i>${PART[id].name.replace(/ — .*/, '').replace(/ \(.*\)/, '')}<b>${badgeText(id)}</b></button>`; }).join('')
     + (S.overview ? `<span style="font-size:12px;color:var(--muted);align-self:center">+ ${Object.keys(partGroups).length - ids.length} parts that are not printed</span>` : '');
@@ -796,6 +814,8 @@ function setStep(k) {
     const so = stepOf[id] ?? STEPS.length - 1, want = (k === 0 || so <= k) ? 1 : 0;
     if (fromOverview && k > 0) reveal[id] = so < k ? 1 : 0;
     target[id] = want;
+    stageTgt[id] = STAGE[id] && k > 0 && k < STAGE[id].until ? 1 : 0;
+    if (fromOverview || k === 0) stageAmt[id] = stageTgt[id];
   }
   amount = 0; $('explode').value = 0; $('exv').textContent = '0%';
   select(null); renderStepUI(); applyOffsets(); refreshMaterials(); stepFocus(k);
@@ -812,7 +832,7 @@ function exitBuild() {
   build.on = false; build.play = false; document.body.classList.remove('building');
   $('tint').checked = build.prevTint; $('explode').disabled = false; $('mode').querySelectorAll('button').forEach(b => b.disabled = false);
   $('buildBtn').textContent = '🔧 Build mode — see it assembled step by step';
-  for (const id of Object.keys(partGroups)) { target[id] = 1; reveal[id] = 1; }
+  for (const id of Object.keys(partGroups)) { target[id] = 1; reveal[id] = 1; stageTgt[id] = stageAmt[id] = 0; }
   printLabels.forEach(o => o.visible = false);
   select(null); applyOffsets(); refreshMaterials(); view('fit');
 }
@@ -901,11 +921,13 @@ function buildStep(dt, t) {
   let moving = false;
   for (const id of Object.keys(partGroups)) {
     const tg = target[id], r = reveal[id];
+    const sa = stageAmt[id], stg = stageTgt[id];
+    if (sa !== stg) { moving = true; stageAmt[id] = sa + Math.sign(stg - sa) * Math.min(Math.abs(stg - sa), dt / 1.5); }
     if (r !== tg) { moving = true; reveal[id] = r + Math.sign(tg - r) * Math.min(Math.abs(tg - r), dt / 0.95); refreshPart(id); }
   }
   if (build.on) {
     pulse = 0.16 + 0.14 * Math.sin(t / 1000 * 4.2);
-    if (build.step > 0) STEPS[build.step].ids.forEach(id => { if (reveal[id] >= 1) refreshPart(id); });
+    if (build.step > 0) (STEPS[build.step].chips || STEPS[build.step].ids).forEach(id => { if (reveal[id] >= 1) refreshPart(id); });
     printLabels.forEach(o => o.visible = $('tint').checked && partGroups[o.userData.id].visible && reveal[o.userData.id] >= 1);
     if (build.play && !moving) { build.playT += dt; if (build.playT > 5.2) { if (build.step < STEPS.length - 1) setStep(build.step + 1); else { build.play = false; renderStepUI(); } } }
   }

@@ -5,7 +5,7 @@ Live: https://cptmclaren.github.io/comet-l1-rocket-3d/
 Generated from the team's OpenRocket design (`L1_H220T.ork`, AeroTech H220T-14A): every component's position and size comes from the model.
 Drag to orbit, right-drag to pan, scroll to zoom, click a part to see what it is, why it's there, how it's mounted and how it's made.
 
-- **Build mode** (button at the top of the side panel): 16 steps that assemble the rocket in build order, with each part flagged *3D printed* or *not printed* (only the nose cone and the avionics sled are printed). Arrow keys step, Esc exits, Auto-play runs it hands-free.
+- **Build mode** (button at the top of the side panel): 18 steps that assemble the rocket in a realistic build order (the motor mount and the E-bay are built off the rocket and joined later; the chute goes in before the E-bay is joined), with each part flagged *3D printed* or *not printed* (only the nose cone and the avionics sled are printed). Arrow keys step, Esc exits, Auto-play runs it hands-free.
 - **Color by how made**: orange = printed, yellow = cut/drilled stock, blue = bought hardware, purple = epoxy.
 - **Live parts**: swivel turns, avionics LED blinks, shock cord and chute sway. **Motor burn** and **Ejection charge** buttons play the flame/smoke and separation.
 
