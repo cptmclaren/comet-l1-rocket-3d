@@ -110,7 +110,10 @@
   .b-legend i{width:9px;height:9px;border-radius:3px}
   .lbl.prn{border-color:var(--accent);color:#ffd2b0;background:rgba(40,20,5,.85)}
   @media (max-width:820px){
-    #build{left:12px;right:12px;bottom:62px;padding:10px 12px}
+    #build{left:12px;right:12px;bottom:62px;padding:10px 12px;max-height:44vh;overflow:auto}
+    #build .b-legend,#build .b-tip{display:none}
+    #bText{font-size:12px;line-height:1.45}
+    .chip{padding:4px 7px;font-size:11px}
     body.building #info{top:12px;bottom:auto;max-height:32%}
   }
   @media (max-width:820px){
@@ -243,16 +246,16 @@ const STEPS = [
    tip: 'The eye of the hook faces forward, toward the nose.'},
   {t: 'Mid + aft centering rings', ids: ['crM', 'crA'], from: 'aft', d: 220,
    text: 'Epoxy the mid ring and the aft ring on the motor tube. The fin tabs will sit between these two rings, so use the fin slots you will cut in the body tube as the guide for spacing. Keep both rings square to the tube.',
-   tip: 'All three rings are 1/8 in birch plywood. Let the epoxy cure before the next step.'},
+   tip: 'All three rings are 1/8 in birch plywood (Ø3¼ in, with a Ø1 7/32 in hole). Sand each ring until it fits the tube. Let the epoxy cure before the next step.'},
   {t: 'Fin-can body tube', ids: ['lower'], from: 'fade', focus: [880, 1660],
-   text: 'Cut the lower body tube to 11½ in and cut the three fin slots at 120°, sized for the fin tabs. This is the tube the finished mount will go into; for now it just sits beside the mount.',
-   tip: 'Mark the slot positions from the mid and aft ring locations.'},
+   text: 'Cut the lower body tube to 11½ in and cut three fin slots, 120° apart, each 7/32 in wide × 4 1/16 in long (per the team drawing, sheet 3). This is the tube the finished mount will go into; for now it just sits beside the mount.',
+   tip: 'Mark the slots from the mid and aft ring positions so the tabs land between the rings.'},
   {t: 'Insert the mount into the fin can', ids: [], chips: MOUNT, focus: [900, 1214], unstage: 'mount',
    text: 'Epoxy the outer edge of each ring and push the whole motor mount into the tube from the aft end until the aft ends are flush. Line the three slots up with the space between the mid and aft rings.',
    tip: 'Do a dry run first. Epoxy sets before you can fix a crooked ring.'},
   {t: 'Fins ×3, through-the-wall', ids: ['fins'], from: 'radial', d: 230,
    text: 'Push each birch fin tab through its slot until it butts the motor tube, and epoxy the tab to the tube between the mid and aft rings. Keep the three fins 120° apart and square to the tube while the epoxy tacks. The tab, not the outside fillet, takes the landing loads.',
-   tip: 'A jig that holds the fins at 120° makes this much easier.'},
+   tip: 'Round the fin edges, not the root or the tab (per the drawing). A jig that holds the fins at 120° makes this much easier.'},
   {t: 'Epoxy fillets', ids: ['fillets'], from: 'radial', d: 24,
    text: 'Once the fins are tacked in, run epoxy fillets along both sides of every fin root, inside and outside the tube. Mask the tube for neat lines. Let it fully cure before moving on.',
    tip: 'Epoxy is the only "part" here that is made on the spot, with no shape to print or buy.'},
@@ -269,14 +272,14 @@ const STEPS = [
    text: 'Feed the 15 ft Kevlar shock cord in through the open front of the middle tube and clip its aft end to the I-hook quick link. Do this now: once the upper section is joined, you can no longer reach the I-hook. Leave the other end hanging out the front.',
    tip: 'The load path to the fin can is cord → I-hook → centering ring → motor tube and body tube.'},
   {t: 'E-bay: coupler 1 + bulkhead + U-bolt', ids: ['cpl1', 'bulkhead', 'ubolt'], from: 'fade',
-   text: 'The upper section is built off the rocket (shown pulled forward). Epoxy the birch bulkhead into the far end of coupler 1 with fillets on both faces. Pass the steel U-bolt through the bulkhead, with two nuts and washers on the forward face, and clip its quick link on. The chute\'s opening shock goes U-bolt → bulkhead → coupler → upper tube.',
+   text: 'The upper section is built off the rocket (shown pulled forward). Sand the birch bulkhead (Ø3 1/8 in) to fit the coupler, then epoxy it about ¼ in in from the aft end of coupler 1 with fillets on both faces. Pass the steel U-bolt through the bulkhead, with two nuts and washers on the forward face, and clip its quick link on. The chute\'s opening shock goes U-bolt → bulkhead → coupler → upper tube.',
    tip: 'Coupler 1 will slide into the middle tube as the separation joint.'},
   {t: 'E-bay: upper tube + static ports', ids: ['upper', 'ports'], from: 'fade',
-   text: 'Epoxy coupler 1 into the aft end of the upper body tube. Drill three clean 1/8 in static ports at 60°, 180° and 300° (station 16.5 in) so outside air pressure can reach the barometer, plus a hole for the avionics switch.',
+   text: 'Epoxy coupler 1 into the aft end of the upper body tube. Drill three small 1/8 in static ports, evenly spaced around the tube at 16.5 in from the nose tip, so outside air pressure can reach the barometer. A hole so the avionics switch is reachable from outside is also suggested.',
    tip: 'Keep the ports clear of the nose shoulder and the joints.'},
   {t: 'E-bay: avionics sled', ids: ['avionics'], from: 'fore', d: 300,
    text: 'Print the sled in PLA, then mount the ESP-32, BMP-280, microSD module, 9 V battery and switch on it. Slide it onto the two threaded rods anchored in the bulkhead, in through the open nose end of the upper tube, so it cannot move under boost. Use an alkaline or metal-cased Li-ion 9 V, not a LiPo.',
-   tip: 'One of only two printed parts. The boards and battery are bought.'},
+   tip: 'One of only two printed parts. The boards and battery are bought. ⚠ Design check: in the drawing the sled starts at 14.17 in but the nose shoulder reaches 15.16 in, so they overlap by about 1 in. Confirm the sled position with your lead before you print.'},
   {t: 'Connect cord, swivel; pack the parachute', ids: ['swivel', 'chute', 'nomex'], from: 'fore', d: 220,
    text: 'Clip the free end of the shock cord to the U-bolt quick link on the E-bay and clip the swivel there too; the chute bridle goes on the swivel\'s other end. Z-fold the cord, burrito-wrap the 42 in ripstop-nylon chute in the Nomex with the open side facing forward, tie the Nomex to the cord, and pack it into the middle tube through its open front.',
    tip: 'Pack loose enough that the ejection gas can push it out.'},
@@ -287,8 +290,8 @@ const STEPS = [
    text: 'Slide the printed nose-cone shoulder into the upper tube and add two small screws through the tube wall (suggested). It comes off to reach the avionics, and it never separates in flight.',
    tip: 'The other printed part. Von Kármán shape, PLA, 1.6 mm wall.'},
   {t: 'Install motor + final check', ids: ['motor'], from: 'aft', d: 360, final: true,
-   text: 'At the pad, assemble the AeroTech reload in its 29/240 case, slide it into the motor tube so the thrust ring sits on the tube end, and screw the retainer cap on. The CG / CP markers are back on: stability ' + stat('Stability') + ' cal at a launch mass of ' + stat('Mass (launch)') + ' (club limits: 1.5–2.0 cal, 1000–1250 g).',
-   tip: 'Try the 🔥 Motor burn and 💨 Ejection charge buttons now to see it work.'},
+   text: 'At the pad, assemble the AeroTech reload in its 29/240 case, slide it into the motor tube so the thrust ring sits on the tube end, and screw the retainer cap on. The team drawing calls for the 14 s delay to be drilled to 10 s. The CG / CP markers are back on: stability ' + stat('Stability') + ' cal at a launch mass of ' + stat('Mass (launch)') + ' (club limits: 1.5–2.0 cal, 1000–1250 g).',
+   tip: 'Motor prep, delay drilling and ignition only with your mentor or range safety officer. Try the 🔥 Motor burn and 💨 Ejection charge buttons to see it work.'},
 ];
 const stepOf = {};
 STEPS.forEach((s, i) => { s.ids = (s.ids || []).filter(id => PART[id]); s.ids.forEach(id => stepOf[id] = i); });
@@ -789,7 +792,7 @@ function stepFocus(i) {
   const span = Math.max(hi - lo, 120) * 1.5, c = new THREE.Vector3((lo + hi) / 2 - L / 2, 0, 0);
   const dir = camera.position.clone().sub(controls.target).normalize();
   const dist = Math.min(Math.max(span * 2.1, 700), fitDist() * 1.1);
-  c.y -= dist * 0.13;      // keep the action above the instruction panel
+  c.y -= dist * (innerWidth <= 820 ? 0.17 : 0.13);      // keep the action above the instruction panel
   moveCam(c.clone().add(dir.multiplyScalar(dist)), c, 900);
 }
 function renderStepUI() {
