@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Comet L1 Rocket — 3D</title>
-<meta name="description" content="Interactive 3D model of the Comet Rocketry L1 rocket (AeroTech HP-H135W) with every internal component, built from the OpenRocket design.">
+<meta name="description" content="Interactive 3D model of the Comet Rocketry L1 rocket (AeroTech H220T-14A) with every internal component, a step-by-step build mode and live part animations, built from the OpenRocket design.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
@@ -65,6 +65,54 @@
   .lbl.cg{border-color:#bbb}.lbl.cp{border-color:#ff5b5b;color:#ffb3b3}
   .tick{font:500 10px 'JetBrains Mono',monospace;color:#9fb0c8;pointer-events:none}
   #loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:14px}
+
+  /* ---- build mode / live parts ---- */
+  .bigbtn{width:100%;border:0;border-radius:10px;padding:10px 12px;margin:2px 0 12px;font:600 13px Inter;color:#1a1208;background:linear-gradient(135deg,#ffa35c,#ff7a2a);cursor:pointer;box-shadow:0 4px 16px rgba(255,122,42,.25)}
+  .bigbtn:hover{filter:brightness(1.07)}
+  body.building .bigbtn{background:var(--chip);color:var(--text);box-shadow:none}
+  .seg.fx button{font-size:12px}
+  .pill{font-size:9.5px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:#1a1208;background:var(--accent);border-radius:5px;padding:1px 5px;margin-left:2px}
+  .mk{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:600;background:var(--chip);border-radius:8px;padding:5px 9px;margin:0 0 8px}
+  .mk i{width:10px;height:10px;border-radius:3px;background:var(--c)}
+  .mknote{font-size:12.5px!important;color:var(--muted)!important;margin-bottom:6px!important}
+  #build{display:none;left:366px;right:12px;bottom:66px;max-width:760px;padding:12px 14px 12px}
+  body.building #build{display:block}
+  body.building #hint{display:none}
+  body.building #info{max-height:calc(100% - 24px - 300px)}
+  #build .b-top{display:flex;align-items:center;gap:10px}
+  #build .b-step{font:600 11px 'JetBrains Mono',monospace;color:#1a1208;background:var(--accent);border-radius:6px;padding:3px 7px;white-space:nowrap}
+  #build h3{margin:0;font-size:15px;flex:1}
+  #build .x2{border:0;background:var(--chip);color:var(--text);font:500 12px Inter;padding:6px 10px;border-radius:8px;cursor:pointer}
+  #build .x2:hover{background:#2a3850}
+  .b-dots{display:flex;gap:4px;margin:10px 0 8px}
+  .b-dots button{flex:1;height:8px;border:0;border-radius:4px;background:#26324a;cursor:pointer;padding:0;transition:background .2s}
+  .b-dots button.done{background:#3e5a86}
+  .b-dots button.cur{background:var(--accent)}
+  .b-dots button.pr{box-shadow:0 -3px 0 0 var(--accent)}
+  .b-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+  .chip{display:flex;align-items:center;gap:7px;border:1px solid var(--line);background:var(--chip);color:var(--text);font:500 12px Inter;border-radius:8px;padding:5px 9px;cursor:pointer}
+  .chip:hover{background:#243049}
+  .chip i{width:10px;height:10px;border-radius:3px;flex:none}
+  .chip b{font-size:10px;letter-spacing:.4px;text-transform:uppercase;padding:2px 6px;border-radius:5px;background:#243049;color:var(--muted)}
+  .chip.pr{border-color:rgba(255,138,61,.6)}
+  .chip.pr b{background:var(--accent);color:#1a1208}
+  #bText{margin:0 0 6px;font-size:13px;line-height:1.5;color:#d3dae5}
+  .b-tip{font-size:12px;line-height:1.45;color:#ffd7b8;background:rgba(255,138,61,.09);border-left:3px solid var(--accent);border-radius:4px;padding:6px 9px;margin-bottom:8px}
+  .b-tip:empty{display:none}
+  .b-nav{display:flex;gap:8px;align-items:center}
+  .b-nav button{border:0;background:var(--chip);color:var(--text);font:600 12px Inter;padding:8px 12px;border-radius:8px;cursor:pointer}
+  .b-nav button:hover{background:#2a3850}
+  .b-nav button.pri{background:var(--accent);color:#1a1208;margin-left:auto}
+  .b-nav button.on{background:#2a3850;box-shadow:inset 0 0 0 1px var(--accent)}
+  .b-nav button:disabled{opacity:.35;cursor:default}
+  .b-legend{display:flex;flex-wrap:wrap;gap:4px 12px;margin-top:9px;font-size:11px;color:var(--muted)}
+  .b-legend span{display:flex;align-items:center;gap:5px}
+  .b-legend i{width:9px;height:9px;border-radius:3px}
+  .lbl.prn{border-color:var(--accent);color:#ffd2b0;background:rgba(40,20,5,.85)}
+  @media (max-width:820px){
+    #build{left:12px;right:12px;bottom:62px;padding:10px 12px}
+    body.building #info{top:12px;bottom:auto;max-height:32%}
+  }
   @media (max-width:820px){
     #side{width:min(330px,calc(100% - 24px))}
     #side.collapsed + #toggleSide{display:block}
@@ -92,6 +140,7 @@
     <div class="stats" id="stats"></div>
   </header>
   <div class="scroll">
+    <button class="bigbtn" id="buildBtn">🔧 Build mode — see it assembled step by step</button>
     <h2>View</h2>
     <div class="ctl">
       <label>Airframe transparency <output id="opv">70%</output></label>
@@ -109,7 +158,10 @@
       <label class="tg"><input type="checkbox" id="isolate"> Isolate selected</label>
       <label class="tg"><input type="checkbox" id="spin"> Auto-rotate</label>
       <label class="tg"><input type="checkbox" id="units"> Show mm</label>
+      <label class="tg"><input type="checkbox" id="live" checked> Live parts</label>
+      <label class="tg"><input type="checkbox" id="tint"> Color by how made</label>
     </div>
+    <div class="seg fx"><button id="fireBtn">🔥 Motor burn</button><button id="puffBtn">💨 Ejection charge</button></div>
     <h2>Components <span style="text-transform:none;letter-spacing:0;font-weight:400">— click to inspect</span></h2>
     <div id="list"></div>
   </div>
@@ -119,6 +171,15 @@
 <div id="info" class="panel"><button class="x" id="closeInfo" aria-label="Close">×</button><div id="infoBody"></div></div>
 <div id="views" class="panel">
   <button data-v="iso">3D</button><button data-v="side">Side</button><button data-v="top">Top</button><button data-v="aft">Aft</button><button data-v="fit">Fit</button>
+</div>
+<div id="build" class="panel">
+  <div class="b-top"><span class="b-step" id="bStep">Step 1 / 1</span><h3 id="bTitle"></h3><button class="x2" id="bExit">Exit build</button></div>
+  <div class="b-dots" id="bDots"></div>
+  <div class="b-chips" id="bChips"></div>
+  <p id="bText"></p>
+  <div class="b-tip" id="bTip"></div>
+  <div class="b-nav"><button id="bPrev">◀ Back</button><button id="bPlay">▶ Auto-play</button><button id="bNext" class="pri">Next step ▶</button></div>
+  <div class="b-legend" id="legend"></div>
 </div>
 <div id="hint" class="panel">Drag to orbit · Right-drag / two fingers to pan · Scroll / pinch to zoom · Click a part</div>
 <div id="tip"></div>
@@ -133,6 +194,104 @@ const R = await (await fetch('rocket.json', {cache: 'no-store'})).json();
 document.getElementById('loading').remove();
 const IN = 25.4, L = R.length, RO = R.r_out, RI = R.r_in;
 const PART = Object.fromEntries(R.parts.map(p => [p.id, p]));
+
+// ---------- how each part is made (drives Build mode + colour coding) ----------
+const MAKE = {
+  print: {label: '3D printed', color: '#ff8a3d'},
+  cut:   {label: 'Cut / drilled from stock — not printed', color: '#e8c26a'},
+  buy:   {label: 'Bought hardware / supplies — not printed', color: '#5fb3ff'},
+  epoxy: {label: 'Epoxy, applied by hand — not printed', color: '#b58cff'},
+};
+const MADE = {nose: 'print', avionics: 'print',
+  upper: 'cut', middle: 'cut', lower: 'cut', cpl1: 'cut', cpl2: 'cut', mmt: 'cut', crF: 'cut', crM: 'cut', crA: 'cut', bulkhead: 'cut', fins: 'cut', ports: 'cut',
+  ubolt: 'buy', swivel: 'buy', ihook: 'buy', retainer: 'buy', btnF: 'buy', btnA: 'buy', chute: 'buy', nomex: 'buy', cord: 'buy', motor: 'buy', ballastA: 'buy', ballastB: 'buy',
+  fillets: 'epoxy'};
+const inch = mm => (mm / IN).toFixed(mm / IN % 1 ? 2 : 0).replace(/\.?0+$/, '') + ' in';
+const lenOf = id => PART[id].st[1] - PART[id].st[0];
+function makeNote(id) {
+  const k = MADE[id] || 'buy';
+  const tube = `Cardboard tube cut to ${inch(lenOf(id))} (${lenOf(id).toFixed(0)} mm).`;
+  return ({
+    nose: 'Print in PLA/PLA+ with a 1.6 mm wall. The 85 mm shoulder has to be a snug fit in the upper tube, so sand or re-scale until it is.',
+    avionics: 'Only the sled is printed (PLA). The ESP-32, BMP-280, microSD module, 9 V battery and switch are bought electronics.',
+    upper: tube + ' Not printed.', middle: tube + ' Not printed.', lower: tube + ' Not printed. Three fin slots are cut through the wall.',
+    cpl1: 'Cardboard coupler cut to ' + inch(lenOf('cpl1')) + '. Not printed.', cpl2: 'Cardboard coupler cut to ' + inch(lenOf('cpl2')) + '. Not printed.',
+    mmt: 'Cardboard 29 mm motor-mount tube cut to 9½ in. Not printed.',
+    crF: 'Birch plywood 1/8 in, cut to size. (The club rules also allow PLA/PLA+ for rings, but this design uses birch.)',
+    crM: 'Birch plywood 1/8 in, cut to size. (Rules also allow PLA/PLA+.)', crA: 'Birch plywood 1/8 in, cut to size. (Rules also allow PLA/PLA+.)',
+    bulkhead: 'Birch plywood 1/4 in disc, cut to size. (Rules also allow PLA/PLA+.)',
+    fins: 'Cut from 3/16 in birch plywood, tabs included, edges rounded. (Rules also allow PLA/PLA+ fins; these are not printed.)',
+    ports: 'Three 1/8 in holes drilled through the tube wall.',
+    fillets: 'Mixed epoxy, applied and shaped by hand after the fins are tacked in.',
+    chute: 'Bought / club-supplied ripstop-nylon parachute.', nomex: 'Bought / club-supplied Nomex blanket.', cord: 'Bought 12-strand Kevlar shock cord.',
+    motor: 'AeroTech reloadable motor — bought, not printed.',
+  })[id] || ({buy: 'Bought hardware — not printed.'})[k];
+}
+const badgeText = id => id === 'avionics' ? 'sled printed · electronics bought' : MADE[id] === 'print' ? '3D printed' : 'not printed · ' + ({cut: 'cut to size', buy: 'bought', epoxy: 'epoxy'})[MADE[id] || 'buy'];
+const stat = k => (R.stats.find(s => s[0] === k) || [0, '—'])[1];
+
+const STEPS = [
+  {t: 'Sort your parts: what gets printed?', from: 'fade', overview: true,
+   text: 'This is the finished rocket colour-coded by how each part is made. Only two parts come off the 3D printer — the nose cone and the avionics sled. The rest is cut cardboard, cut birch plywood, bought hardware, or epoxy. Step through to see the order they go together.',
+   tip: 'Orange = printed. Yellow = cut/drilled from stock. Blue = bought. Purple = epoxy.'},
+  {t: 'Motor-mount tube', ids: ['mmt'], from: 'aft', d: 360,
+   text: 'Cut the 29 mm motor-mount tube to 9½ in (241.3 mm) and sand the ends square. Everything that holds the fin can together is built on this tube — thrust travels motor → tube → rings and fins → body.',
+   tip: 'Dry-fit your motor case in it before anything is glued.'},
+  {t: 'Forward ring + I-hook', ids: ['ihook', 'crF'], from: 'fore', d: 260,
+   text: 'Pass the I-hook through the forward centering ring, put a nut and washer on each side, and epoxy it. Then epoxy the ring on the motor tube near its forward end. The recovery cord clips to this hook, so this joint takes the parachute shock.',
+   tip: 'The eye of the hook faces forward, toward the nose.'},
+  {t: 'Mid + aft centering rings', ids: ['crM', 'crA'], from: 'aft', d: 320,
+   text: 'Epoxy the mid ring and the aft ring on the motor tube. The fin tabs will sit between these two rings, so use the fin slots in the body tube as your guide for the spacing. Keep both rings square to the tube.',
+   tip: 'All three rings are 1/8 in birch plywood.'},
+  {t: 'Fit the mount into the fin can', ids: ['lower'], from: 'fore', d: 420,
+   text: 'Epoxy the edge of each ring and slide the motor mount into the lower body tube until the aft ends of the mount and the tube are flush. Line the three fin slots up with the space between the mid and aft rings. (Shown as the tube sliding over the mount; in your hands you push the mount in.)',
+   tip: 'Do a dry run first. Epoxy gets stubborn fast.'},
+  {t: 'Fins ×3, through-the-wall', ids: ['fins'], from: 'radial', d: 230,
+   text: 'Push each birch fin tab through its slot until it butts the motor tube, and epoxy the tab to the tube between the mid and aft rings. Keep the three fins 120° apart and square to the tube while the epoxy tacks. The tab, not the outside fillet, takes the landing loads.',
+   tip: 'A printed or cardboard jig that holds the fins at 120° makes this much easier.'},
+  {t: 'Epoxy fillets', ids: ['fillets'], from: 'radial', d: 24,
+   text: 'Once the fins are tacked in, run epoxy fillets along both sides of every fin root, inside and outside the tube. Mask the tube for neat lines. Let it fully cure before moving on.',
+   tip: 'Epoxy is the only “part” here that is made on the spot — nothing to print or buy as a shape.'},
+  {t: 'Motor retainer + aft rail button', ids: ['retainer', 'btnA'], from: 'aft', d: 220, s: {btnA: [0, -130]},
+   text: 'Epoxy (or JB-Weld) the body of the aluminum 29 mm retainer onto the aft end of the motor tube; its cap screws on over the motor later. Glue a small backing block inside the fin can between fins 2 and 3, then screw the aft rail button into it, 20 mm from the aft end.',
+   tip: 'Rail buttons are bought Delrin hardware.'},
+  {t: 'Coupler 2 (access joint)', ids: ['cpl2'], from: 'fore', d: 340,
+   text: 'Bond coupler 2 half-way into the forward end of the fin can. It stays with the fin can and never separates in flight; the middle tube will be screwed onto it.',
+   tip: 'Cut from cardboard coupler stock, 4 in long.'},
+  {t: 'Middle tube + forward rail button', ids: ['middle', 'btnF'], from: 'fore', d: 420, s: {btnF: [0, -130]},
+   text: 'Slide the recovery-bay tube over the free half of coupler 2 and fasten it with screws (the access joint). Screw the forward rail button through the wall 30 mm from the aft end of this tube, with a backing plate inside.',
+   tip: 'The access joint lets you reach the recovery bay and the cord without un-gluing anything.'},
+  {t: 'Coupler 1 + bulkhead + U-bolt', ids: ['cpl1', 'bulkhead', 'ubolt'], from: 'fore', d: 380,
+   text: 'Epoxy the birch bulkhead into the far end of coupler 1 with fillets on both faces. Pass the steel U-bolt through the bulkhead, with two nuts and washers on the forward face, and clip its quick link on. The parachute’s opening shock goes U-bolt → bulkhead → coupler → upper tube.',
+   tip: 'Coupler 1 slides into the middle tube as the separation joint — friction fit or 2 nylon shear pins.'},
+  {t: 'Upper tube (E-bay) + static ports', ids: ['upper', 'ports'], from: 'fore', d: 420,
+   text: 'Epoxy coupler 1 into the aft end of the upper body tube. Drill three clean 1/8 in static ports at 60°, 180° and 300° (station 16.5 in) so outside air pressure can reach the barometer, plus a hole for the avionics switch.',
+   tip: 'Keep the ports clear of the nose shoulder and the joints.'},
+  {t: 'Avionics sled', ids: ['avionics'], from: 'fore', d: 300,
+   text: 'Print the sled in PLA, then mount the ESP-32, BMP-280, microSD module, 9 V battery and switch on it. Slide it onto two threaded rods anchored in the bulkhead so it cannot move under boost. Use an alkaline or metal-cased Li-ion 9 V — not a LiPo.',
+   tip: 'This is one of only two printed parts. The boards and battery are bought.'},
+  {t: 'Shock cord + swivel', ids: ['cord', 'swivel'], from: 'fore', d: 260,
+   text: 'Z-fold the 15 ft Kevlar shock cord. Tie or clip its aft end to the I-hook quick link and its forward end to the U-bolt quick link. Clip the swivel to the U-bolt quick link; the parachute bridle goes on its other end.',
+   tip: 'The load path to the fin can is cord → I-hook → centering ring → motor tube and body tube.'},
+  {t: 'Parachute + Nomex', ids: ['chute', 'nomex'], from: 'fore', d: 240,
+   text: 'Fold the 42 in ripstop-nylon chute and burrito-wrap it in the Nomex blanket with the open side facing forward. Tie the Nomex to the shock cord so it can’t fly away. Pack it all loosely in the recovery bay.',
+   tip: 'Pack loose enough that the ejection gas can push it out.'},
+  {t: 'Nose cone', ids: ['nose'], from: 'fore', d: 380,
+   text: 'Slide the printed nose-cone shoulder into the upper tube and add two small screws through the tube wall (suggested). It comes off to reach the avionics, and it never separates in flight.',
+   tip: 'The other printed part. Von Kármán shape, PLA, 1.6 mm wall.'},
+  {t: 'Install motor + final check', ids: ['motor'], from: 'aft', d: 360, final: true,
+   text: 'Assemble the AeroTech reload in its 29/240 case, slide it into the motor tube so the thrust ring sits on the tube end, and screw the retainer cap on. The CG / CP markers are back on: stability ' + stat('Stability') + ' cal at a launch mass of ' + stat('Mass (launch)') + ' (club limits: 1.5–2.0 cal, 1000–1250 g).',
+   tip: 'Try the 🔥 Motor burn and 💨 Ejection charge buttons now to see it work.'},
+];
+const stepOf = {};
+STEPS.forEach((s, i) => { s.ids = (s.ids || []).filter(id => PART[id]); s.ids.forEach(id => stepOf[id] = i); });
+const slideOf = {};
+STEPS.forEach(s => s.ids.forEach(id => {
+  const d = s.d || 300, v = (s.s && s.s[id]) || (s.from === 'fore' ? [-d, 0] : s.from === 'aft' ? [d, 0] : [0, 0]);
+  slideOf[id] = v;
+}));
+const RADIAL = {};   // radial slide-in distance per part (fins go in through the wall)
+STEPS.forEach(s => { if (s.from === 'radial') s.ids.forEach(id => RADIAL[id] = s.d); });
 
 // ---------- renderer / scene ----------
 const app = document.getElementById('app');
@@ -160,6 +319,7 @@ controls.minDistance = 40; controls.maxDistance = 6000; controls.screenSpacePann
 const world = new THREE.Group(); world.position.x = -L / 2; scene.add(world);   // nose tip at x=0, axis along +x
 
 // ---------- helpers ----------
+const $ = id => document.getElementById(id);
 const SEG = 112;
 function lathe(profile) {            // profile: [[r, x], ...] -> solid of revolution about the x-axis
   const g = new THREE.LatheGeometry(profile.map(([r, x]) => new THREE.Vector2(Math.max(r, 0), x)), SEG);
@@ -230,6 +390,8 @@ add('bulkhead', new THREE.Mesh(disk(R.cpl_r_in - 0.05, ...st('bulkhead')), mat(c
     box(48.5, 17.5, 26.5, x0 + 34, y0 + 10.5, 16, '#222428', {rough: 0.45}),   // 9 V battery
     box(10, 6, 8, x1 - 10, y0 + 4.5, 22, '#d33', {rough: 0.4}),                 // switch
   ];
+  const led = new THREE.Mesh(new THREE.SphereGeometry(1.9, 14, 10), mat('#2aff6b', {rough: 0.3}));
+  led.position.set(x0 + 52, y0 + 4.0, -5); led.userData.led = true; led.userData.keep = true; meshes.push(led);   // blinking status LED
   const b = st('bulkhead')[0];
   for (const z of [-26, 26]) {
     const r = new THREE.Mesh(new THREE.CylinderGeometry(2.6, 2.6, b + 8 - (x0 - 4), 14), metal('#9aa3ad'));
@@ -265,13 +427,15 @@ if (PART.ballastA) {
   const [a, b] = st('swivel'), meshes = [];
   const barrel = new THREE.Mesh(new THREE.CylinderGeometry(3.5, 3.5, b - a - 10, 16), metal(col('swivel'))); barrel.rotation.z = Math.PI / 2; barrel.position.set((a + b) / 2, 0, 0); meshes.push(barrel);
   for (const x of [a + 3, b - 3]) { const e = new THREE.Mesh(new THREE.TorusGeometry(3.6, 1.1, 8, 20), metal('#c3c9cf')); e.position.set(x, 0, 0); e.rotation.y = Math.PI / 2; meshes.push(e); }
+  const stripe = new THREE.Mesh(new THREE.BoxGeometry(b - a - 14, 1.2, 2.6), mat('#1b1f25', {rough: 0.5})); stripe.position.set((a + b) / 2, 3.6, 0); stripe.userData.keep = true; meshes.push(stripe);
   add('swivel', ...meshes);
 }
+let chuteCanopy = null, nomexMesh = null;
 // packed parachute (rolled canopy + shroud lines to the swivel)
 {
   const [a, b] = st('chute'), meshes = [];
   const prof = []; for (let i = 0; i <= 16; i++) { const t = i / 16; const x = a + t * (b - a); const e = Math.min(t, 1 - t) * (b - a); prof.push([Math.min(33, 10 + e * 1.6), x]); }
-  meshes.push(new THREE.Mesh(lathe([[0, a], ...prof, [0, b]]), mat(col('chute'), {rough: 0.85})));
+  meshes.push(chuteCanopy = new THREE.Mesh(lathe([[0, a], ...prof, [0, b]]), mat(col('chute'), {rough: 0.85})));
   for (let k = 0; k < 8; k++) { const t = k / 8 * Math.PI * 2; meshes.push(tubeAlong([[a + 4, Math.cos(t) * 20, Math.sin(t) * 20], [a - 6, Math.cos(t) * 8, Math.sin(t) * 8], [st('swivel')[1] - 2, 0, 0]], 0.45, '#f4f4f4', {rough: 0.9})); }
   add('chute', ...meshes);
 }
@@ -279,17 +443,23 @@ if (PART.ballastA) {
 {
   const [a, b] = st('nomex');
   const m = new THREE.Mesh(new THREE.BoxGeometry(b - a, 56, 56, 1, 1, 1), mat(col('nomex'), {rough: 0.9}));
-  m.position.set((a + b) / 2, 0, 0); m.rotation.x = Math.PI / 4;
+  m.position.set((a + b) / 2, 0, 0); m.rotation.x = Math.PI / 4; nomexMesh = m;
   add('nomex', m);
 }
-// shock cord: Z-folded bundle + runs to the U-bolt and to the I-hook
+// shock cord: Z-folded bundle + runs to the U-bolt and to the I-hook (re-meshed a few times a second so it can sway)
+const cordMeshes = [];
+const cordSpec = (t = 0) => {
+  const [a, b] = st('cord'), ub = st('ubolt'), ih = st('ihook'), n = 9;
+  const w = (i, f = 1.6) => Math.sin(t * f + i * 0.9) - Math.sin(i * 0.9);
+  const fold = [];
+  for (let i = 0; i <= n; i++) { const x = a + 4 + (b - a - 8) * i / n; fold.push([x, (i % 2 ? 1 : -1) * 26 + 2 * w(i), -6 + (i % 3) * 6 + 3 * w(i + 3, 1.3)]); }
+  const r1 = [[ub[1] - 3, 0, 0], [ub[1] + 8, 4 * w(1), -30 + 5 * w(2)], [st('chute')[1], 3 * w(3), -36 + 4 * w(4)], [a + 4, -26, -6]];
+  const r2 = [[b - 4, 26, 0], [b + 15, 10 + 3 * w(5), 30 + 5 * w(6)], [ih[0] - 10, 3 * w(7), 18 + 4 * w(8)], [ih[0] + 4, 0, 0]];
+  return [[fold, 3.2], [r1, 2.2], [r2, 2.2]];
+};
+const tubeGeo = (points, radius) => new THREE.TubeGeometry(new THREE.CatmullRomCurve3(points.map(p => new THREE.Vector3(...p)), false, 'catmullrom', 0.2), Math.max(24, points.length * 12), radius, 10, false);
 {
-  const [a, b] = st('cord'), meshes = [], fold = [];
-  const n = 9; for (let i = 0; i <= n; i++) { const x = a + 4 + (b - a - 8) * i / n; fold.push([x, (i % 2 ? 1 : -1) * 26, -6 + (i % 3) * 6]); }
-  meshes.push(tubeAlong(fold, 3.2, col('cord'), {rough: 0.85}));
-  const ub = st('ubolt'), ih = st('ihook');
-  meshes.push(tubeAlong([[ub[1] - 3, 0, 0], [ub[1] + 8, 0, -30], [st('chute')[1], 0, -36], [a + 4, -26, -6]], 2.2, col('cord'), {rough: 0.85}));
-  meshes.push(tubeAlong([[b - 4, 26, 0], [b + 15, 10, 30], [ih[0] - 10, 0, 18], [ih[0] + 4, 0, 0]], 2.2, col('cord'), {rough: 0.85}));
+  const meshes = cordSpec(0).map(([pts, r]) => { const m = new THREE.Mesh(tubeGeo(pts, r), mat(col('cord'), {rough: 0.85})); cordMeshes.push(m); return m; });
   add('cord', ...meshes);
 }
 // I-hook through the forward centering ring
@@ -404,35 +574,52 @@ const ruler = new THREE.Group(); world.add(ruler);
 const EXPLODE = {nose: [-260, 0], upper: [-170, 0], recovery: [-40, 150], middle: [0, 0], lower: [140, 0], motor: [380, 0]};
 const EJECT = {nose: [-340, 0], upper: [-340, 0], recovery: [-170, 70], middle: [0, 0], lower: [0, 0], motor: [0, 0]};
 let mode = 'explode', amount = 0, anim = null;
+const build = {on: false, step: 0, play: false, playT: 0, prevTint: false};
+const reveal = {}, target = {};                      // build-mode fade/slide progress per part (0 hidden .. 1 fully installed)
+for (const id of Object.keys(partGroups)) reveal[id] = target[id] = 1;
+const easeOut = k => 1 - Math.pow(1 - k, 3);
+const jitter = {x: 0, y: 0, z: 0};
 function applyOffsets() {
   const tbl = mode === 'explode' ? EXPLODE : EJECT;
   for (const [id, g] of Object.entries(partGroups)) {
-    const [dx, dy] = tbl[PART[id].group] || [0, 0];
-    g.position.set(dx * amount, dy * amount, 0);
+    let [dx, dy] = build.on ? [0, 0] : (tbl[PART[id].group] || [0, 0]);
+    dx *= amount; dy *= amount;
+    const r = reveal[id], k = 1 - easeOut(r);
+    const sl = slideOf[id];
+    if (r < 1 && sl) { dx += sl[0] * k; dy += sl[1] * k; }
+    g.position.set(dx, dy, 0);
+    g.visible = r > 0.004;
+    if (RADIAL[id]) g.children.forEach(m => { const a = m.rotation.x; m.position.set(0, Math.cos(a) * RADIAL[id] * k, Math.sin(a) * RADIAL[id] * k); });
   }
-  markers.visible = document.getElementById('cgcp').checked && amount < 0.02;
+  markers.visible = !!($('cgcp').checked && amount < 0.02 && (!build.on || STEPS[build.step].final));
 }
 
-// ---------- materials state (opacity / cut / isolate / highlight) ----------
+// ---------- materials state (opacity / cut / isolate / highlight / build) ----------
 const clip = new THREE.Plane(new THREE.Vector3(0, 0, -1), 0);
-let selected = null, hovered = null;
-function refreshMaterials() {
-  const op = 1 - document.getElementById('opacity').value / 100;
-  const cut = document.getElementById('cut').checked, iso = document.getElementById('isolate').checked;
-  for (const [id, g] of Object.entries(partGroups)) {
-    g.traverse(m => {
-      if (!m.isMesh) return; const M = m.material, base = M.userData.base;
-      let o = SKIN.has(id) ? Math.max(op, 0.06) : (id === 'cpl1' || id === 'cpl2') ? Math.min(1, op + 0.3) : 1;
-      if (iso && selected && id !== selected) o = Math.min(o, 0.08);
-      M.opacity = o; M.depthWrite = o > 0.6;
-      M.clippingPlanes = cut && CUTTABLE.has(id) ? [clip] : null;
-      const hl = id === selected ? 0.35 : id === hovered ? 0.18 : 0;
-      M.emissive = new THREE.Color(hl ? (id === selected ? 0xff8a3d : 0x5fb3ff) : 0x000000); M.emissiveIntensity = hl ? hl : 0;
-      M.needsUpdate = true;
-    });
-    if (SKIN.has(id)) g.children.forEach(m => m.renderOrder = 2);
-  }
+let selected = null, hovered = null, pulse = 0.3;
+function refreshPart(id) {
+  const g = partGroups[id]; if (!g) return;
+  const op = 1 - $('opacity').value / 100;
+  const cut = $('cut').checked, iso = $('isolate').checked, tint = $('tint').checked;
+  const isNew = build.on && build.step > 0 && STEPS[build.step].ids.includes(id);
+  const rv = Math.min(1, reveal[id] * 2.2);
+  g.traverse(m => {
+    if (!m.isMesh) return; const M = m.material, base = M.userData.base;
+    let o = SKIN.has(id) ? Math.max(op, 0.06) : (id === 'cpl1' || id === 'cpl2') ? Math.min(1, op + 0.3) : 1;
+    if (iso && selected && id !== selected) o = Math.min(o, 0.08);
+    o *= rv;
+    M.opacity = o; M.depthWrite = o > 0.6;
+    M.clippingPlanes = cut && CUTTABLE.has(id) ? [clip] : null;
+    if (tint && !m.userData.keep) M.color.set(MAKE[m.userData.make || MADE[id] || 'buy'].color); else M.color.copy(base.color);
+    if (m.userData.led) return;
+    const hl = id === selected ? 0.35 : id === hovered ? 0.18 : isNew ? pulse : 0;
+    M.emissive.set(hl ? (id === selected ? 0xff8a3d : isNew && id !== hovered ? 0x46c37b : 0x5fb3ff) : 0x000000); M.emissiveIntensity = hl;
+    M.needsUpdate = true;
+  });
+  if (SKIN.has(id)) g.children.forEach(m => m.renderOrder = 2);
 }
+function refreshMaterials() { for (const id of Object.keys(partGroups)) refreshPart(id); }
+if (partGroups.avionics) partGroups.avionics.children.forEach((m, i) => { if (i === 0) m.userData.make = 'print'; else m.userData.make = 'buy'; });
 
 // ---------- UI ----------
 const fmtLen = mm => document.getElementById('units').checked ? `${mm.toFixed(1)} mm` : `${(mm / IN).toFixed(3)} in`;
@@ -448,7 +635,7 @@ function buildList() {
     div.innerHTML = `<div class="grp-title"><span>${gname}</span><span>${tot.toFixed(0)} g</span></div>`;
     for (const p of ps) {
       const el = document.createElement('div'); el.className = 'part'; el.dataset.id = p.id;
-      el.innerHTML = `<span class="dot" style="background:${p.color}"></span><span>${p.name}</span><span class="m">${p.mass ? p.mass.toFixed(0) + ' g' : ''}</span>`;
+      el.innerHTML = `<span class="dot" style="background:${p.color}"></span><span>${p.name}${MADE[p.id] === 'print' ? ' <span class="pill">printed</span>' : ''}</span><span class="m">${p.mass ? p.mass.toFixed(0) + ' g' : ''}</span>`;
       el.onclick = () => select(p.id, true);
       el.onmouseenter = () => { hovered = p.id; refreshMaterials(); }; el.onmouseleave = () => { hovered = null; refreshMaterials(); };
       div.appendChild(el);
@@ -462,6 +649,8 @@ function showInfo(id) {
   const [a, b] = p.st, len = b - a;
   box.querySelector('#infoBody').innerHTML = `
     <h3>${p.name}</h3><div class="mat">${p.material}</div>
+    <div class="mk" style="--c:${MAKE[MADE[id] || 'buy'].color}"><i></i>${id === 'avionics' ? '3D printed sled + bought electronics' : MAKE[MADE[id] || 'buy'].label}</div>
+    <p class="mknote">${makeNote(id)}</p>
     <div class="kv"><b>Station</b><span>${len > 0.5 ? `${fmtLen(a)} → ${fmtLen(b)}` : fmtLen(a)} from nose tip</span>
     ${len > 0.5 ? `<b>Length</b><span>${fmtLen(len)}</span>` : ''}
     ${p.mass ? `<b>Mass</b><span>${p.mass.toFixed(1)} g</span>` : ''}</div>
@@ -511,18 +700,20 @@ function view(v) {
 document.querySelectorAll('#views button').forEach(b => b.onclick = () => view(b.dataset.v));
 
 // controls wiring
-const $ = id => document.getElementById(id);
 $('opacity').oninput = e => { $('opv').textContent = e.target.value + '%'; refreshMaterials(); };
 $('explode').oninput = e => { amount = e.target.value / 100; $('exv').textContent = e.target.value + '%'; applyOffsets(); };
-$('mode').querySelectorAll('button').forEach(b => b.onclick = () => {
-  $('mode').querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b)); mode = b.dataset.m;
+function setMode(m) {
+  $('mode').querySelectorAll('button').forEach(x => x.classList.toggle('on', x.dataset.m === m)); mode = m;
   $('slLbl').textContent = mode === 'explode' ? 'Explode sections' : 'Separate at ejection';
   applyOffsets();
+}
+$('mode').querySelectorAll('button').forEach(b => b.onclick = () => {
+  setMode(b.dataset.m);
   if (amount === 0) { // play a short animation so the difference is obvious
     const start = performance.now(); anim = t => { const k = Math.min((t - start) / 1200, 1); amount = 0.5 - 0.5 * Math.cos(Math.PI * k); $('explode').value = Math.round(amount * 100); $('exv').textContent = $('explode').value + '%'; applyOffsets(); if (k >= 1) anim = null; };
   }
 });
-['cut', 'isolate'].forEach(id => $(id).onchange = refreshMaterials);
+['cut', 'isolate', 'tint'].forEach(id => $(id).onchange = refreshMaterials);
 $('cgcp').onchange = applyOffsets;
 $('ruler').onchange = e => ruler.visible = e.target.checked;
 $('spin').onchange = e => controls.autoRotate = e.target.checked; controls.autoRotateSpeed = 0.8;
@@ -538,7 +729,7 @@ function pick(ev) {
   ndc.set(((ev.clientX - r.left) / r.width) * 2 - 1, -((ev.clientY - r.top) / r.height) * 2 + 1);
   ray.setFromCamera(ndc, camera);
   const op = 1 - $('opacity').value / 100, cut = $('cut').checked;
-  const objs = Object.entries(partGroups).filter(([id]) => !(SKIN.has(id) && op < 0.5)).map(([, g]) => g);
+  const objs = Object.entries(partGroups).filter(([id, g]) => g.visible && !(SKIN.has(id) && op < 0.5)).map(([, g]) => g);
   for (const h of ray.intersectObjects(objs, true)) {
     if (cut && CUTTABLE.has(h.object.userData.id) && clip.distanceToPoint(h.point) < 0) continue;
     return h.object.userData.id;
@@ -562,11 +753,173 @@ addEventListener('resize', () => {
   renderer.setSize(innerWidth, innerHeight); labels.setSize(innerWidth, innerHeight); updateOffset();
 });
 
+
+// ---------- BUILD MODE ----------
+$('legend').innerHTML = Object.entries(MAKE).map(([k, v]) => `<span><i style="background:${v.color}"></i>${v.label.split(' — ')[0]}</span>`).join('');
+$('bDots').innerHTML = STEPS.map((s, i) => `<button title="${i}. ${s.t}" data-i="${i}" class="${s.ids.some(id => MADE[id] === 'print') ? 'pr' : ''}"></button>`).join('');
+$('bDots').querySelectorAll('button').forEach(b => b.onclick = () => { build.play = false; setStep(+b.dataset.i); });
+const printLabels = [];
+for (const id of Object.keys(partGroups)) if (MADE[id] === 'print') {
+  const d = document.createElement('div'); d.className = 'lbl prn'; d.textContent = '🖨 3D PRINTED';
+  const o = new CSS2DObject(d); const [a, b] = PART[id].st; o.position.set((a + b) / 2, RO + 34, 0); o.visible = false; o.userData.id = id;
+  partGroups[id].add(o); printLabels.push(o);
+}
+function stepFocus(i) {
+  const S = STEPS[i];
+  if (!S.ids.length) return view('fit');
+  let lo = 1e9, hi = -1e9; S.ids.forEach(id => { lo = Math.min(lo, PART[id].st[0]); hi = Math.max(hi, PART[id].st[1]); });
+  const span = Math.max(hi - lo, 120) * 1.5, c = new THREE.Vector3((lo + hi) / 2 - L / 2, 0, 0);
+  const dir = camera.position.clone().sub(controls.target).normalize();
+  const dist = Math.min(Math.max(span * 2.1, 700), fitDist() * 1.1);
+  c.y -= dist * 0.13;      // keep the action above the instruction panel
+  moveCam(c.clone().add(dir.multiplyScalar(dist)), c, 900);
+}
+function renderStepUI() {
+  const S = STEPS[build.step], n = STEPS.length - 1;
+  $('bStep').textContent = build.step === 0 ? 'Overview' : `Step ${build.step} / ${n}`;
+  $('bTitle').textContent = S.t; $('bText').textContent = S.text; $('bTip').textContent = S.tip || '';
+  const ids = S.overview ? Object.keys(partGroups).filter(id => MADE[id] === 'print') : S.ids;
+  $('bChips').innerHTML = ids.map(id => { const pr = MADE[id] === 'print';
+    return `<button class="chip ${pr ? 'pr' : 'np'}" data-id="${id}"><i style="background:${MAKE[MADE[id] || 'buy'].color}"></i>${PART[id].name.replace(/ — .*/, '').replace(/ \(.*\)/, '')}<b>${badgeText(id)}</b></button>`; }).join('')
+    + (S.overview ? `<span style="font-size:12px;color:var(--muted);align-self:center">+ ${Object.keys(partGroups).length - ids.length} parts that are not printed</span>` : '');
+  $('bChips').querySelectorAll('.chip').forEach(c => c.onclick = () => select(c.dataset.id, true));
+  $('bDots').querySelectorAll('button').forEach((b, i) => { b.classList.toggle('cur', i === build.step); b.classList.toggle('done', i < build.step); });
+  $('bPrev').disabled = build.step === 0; $('bNext').disabled = build.step === n;
+  $('bNext').textContent = build.step === 0 ? 'Start building ▶' : build.step === n ? 'Done' : 'Next step ▶';
+  $('bPlay').classList.toggle('on', build.play); $('bPlay').textContent = build.play ? '⏸ Pause' : '▶ Auto-play';
+}
+function setStep(k) {
+  k = Math.max(0, Math.min(STEPS.length - 1, k));
+  const prev = build.step, fromOverview = prev === 0 || !build.on;
+  build.step = k; build.playT = 0;
+  for (const id of Object.keys(partGroups)) {
+    const so = stepOf[id] ?? STEPS.length - 1, want = (k === 0 || so <= k) ? 1 : 0;
+    if (fromOverview && k > 0) reveal[id] = so < k ? 1 : 0;
+    target[id] = want;
+  }
+  amount = 0; $('explode').value = 0; $('exv').textContent = '0%';
+  select(null); renderStepUI(); applyOffsets(); refreshMaterials(); stepFocus(k);
+}
+function enterBuild() {
+  build.on = true; document.body.classList.add('building');
+  build.prevTint = $('tint').checked; $('tint').checked = true;
+  $('explode').disabled = true; $('mode').querySelectorAll('button').forEach(b => b.disabled = true);
+  $('buildBtn').textContent = '🔧 Build mode is on';
+  build.step = 0; setStep(0);
+  if (innerWidth <= 820) { $('side').classList.add('collapsed'); updateOffset(); }
+}
+function exitBuild() {
+  build.on = false; build.play = false; document.body.classList.remove('building');
+  $('tint').checked = build.prevTint; $('explode').disabled = false; $('mode').querySelectorAll('button').forEach(b => b.disabled = false);
+  $('buildBtn').textContent = '🔧 Build mode — see it assembled step by step';
+  for (const id of Object.keys(partGroups)) { target[id] = 1; reveal[id] = 1; }
+  printLabels.forEach(o => o.visible = false);
+  select(null); applyOffsets(); refreshMaterials(); view('fit');
+}
+$('buildBtn').onclick = () => build.on ? exitBuild() : enterBuild();
+$('bExit').onclick = exitBuild;
+$('bNext').onclick = () => { build.play = false; setStep(build.step + 1); };
+$('bPrev').onclick = () => { build.play = false; setStep(build.step - 1); };
+$('bPlay').onclick = () => { build.play = !build.play; if (build.play && build.step === STEPS.length - 1) setStep(0); build.playT = 0; renderStepUI(); };
+addEventListener('keydown', e => {
+  if (!build.on || /input|textarea/i.test(e.target.tagName)) return;
+  if (e.key === 'ArrowRight') { build.play = false; setStep(build.step + 1); }
+  else if (e.key === 'ArrowLeft') { build.play = false; setStep(build.step - 1); }
+  else if (e.key === 'Escape') exitBuild();
+});
+
+// ---------- effects: motor flame, smoke, ejection puff ----------
+const fxTex = (() => { const c = document.createElement('canvas'); c.width = c.height = 64; const x = c.getContext('2d'); const g = x.createRadialGradient(32, 32, 0, 32, 32, 32); g.addColorStop(0, 'rgba(255,255,255,1)'); g.addColorStop(.45, 'rgba(255,255,255,.45)'); g.addColorStop(1, 'rgba(255,255,255,0)'); x.fillStyle = g; x.fillRect(0, 0, 64, 64); return new THREE.CanvasTexture(c); })();
+const fx = []; let fxN = 0;
+for (let i = 0; i < 220; i++) { const sp = new THREE.Sprite(new THREE.SpriteMaterial({map: fxTex, transparent: true, depthWrite: false, opacity: 0})); sp.visible = false; sp.userData = {life: 0}; world.add(sp); fx.push(sp); }
+function emit(pos, vel, life, s0, s1, color, a = 0.5, additive = false) {
+  const sp = fx[fxN++ % fx.length], d = sp.userData;
+  sp.position.copy(pos); Object.assign(d, {v: vel, life, max: life, s0, s1, a});
+  sp.material.color.set(color);
+  const bl = additive ? THREE.AdditiveBlending : THREE.NormalBlending; if (sp.material.blending !== bl) { sp.material.blending = bl; sp.material.needsUpdate = true; }
+  sp.visible = true;
+}
+function fxStep(dt) {
+  for (const sp of fx) { const d = sp.userData; if (!d.life) continue; d.life -= dt; if (d.life <= 0) { d.life = 0; sp.visible = false; continue; }
+    const k = 1 - d.life / d.max; sp.position.addScaledVector(d.v, dt); d.v.multiplyScalar(1 - 1.2 * dt); sp.scale.setScalar(d.s0 + (d.s1 - d.s0) * k); sp.material.opacity = d.a * (1 - k) * Math.min(1, k * 8 + .2); }
+}
+const flame = new THREE.Group(); flame.visible = false; world.add(flame);
+{
+  const mk = (r, h, c, o) => { const m = new THREE.Mesh(new THREE.ConeGeometry(r, h, 24, 1, true), new THREE.MeshBasicMaterial({color: c, transparent: true, opacity: o, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide}));
+    m.rotation.z = -Math.PI / 2; m.position.x = h / 2; return m; };
+  flame.add(mk(13, 170, 0xff6a1a, .55), mk(8, 120, 0xffc24a, .75), mk(4, 70, 0xffffff, .9)); flame.position.x = L - 4;
+}
+let burn = null;
+$('fireBtn').onclick = () => {
+  if (burn) return;
+  if (amount > 0.02) { amount = 0; $('explode').value = 0; $('exv').textContent = '0%'; applyOffsets(); }
+  burn = {t0: performance.now(), dur: 2300};
+};
+$('puffBtn').onclick = () => {
+  if (build.on) return;
+  setMode('eject'); amount = 0; $('explode').value = 0; $('exv').textContent = '0%'; applyOffsets();
+  const start = performance.now(), x = R.joints.upper_middle, V = new THREE.Vector3;
+  for (let i = 0; i < 70; i++) { const a = Math.random() * Math.PI * 2, sp = 120 + Math.random() * 300;
+    emit(new THREE.Vector3(x + (Math.random() - .5) * 20, Math.cos(a) * RO, Math.sin(a) * RO), V.set((Math.random() - .5) * 160, Math.cos(a) * sp, Math.sin(a) * sp).clone(), 1.5 + Math.random() * .8, 18, 90 + Math.random() * 40, i % 5 ? 0xd6d6d6 : 0xffb066, .55, false); }
+  emit(new THREE.Vector3(x, 0, 0), new THREE.Vector3, .35, 40, 260, 0xffd9a0, .9, true);
+  anim = t => { const k = Math.min((t - start) / 1500, 1); amount = easeOut(k); $('explode').value = Math.round(amount * 100); $('exv').textContent = $('explode').value + '%'; applyOffsets(); if (k >= 1) anim = null; };
+};
+
+// ---------- live parts (subtle idle motion) ----------
+let lastCord = 0;
+function liveStep(t, dt) {
+  const on = $('live').checked, T = t / 1000;
+  if (partGroups.swivel) partGroups.swivel.rotation.x = on ? T * 1.1 : 0;                                    // swivel turns freely
+  const led = partGroups.avionics?.children.find(m => m.userData.led);
+  if (led) { const lit = on && (T % 1) < 0.12 || (on && (T % 1) > 0.25 && (T % 1) < 0.33); led.material.emissive.set(0x2aff6b); led.material.emissiveIntensity = lit ? 2.2 : 0.06; }   // double-blink status LED
+  if (chuteCanopy) { const s = on ? 1 + 0.035 * Math.sin(T * 1.7) : 1; chuteCanopy.scale.set(1, s, 2 - s); }       // packed chute breathes
+  if (nomexMesh) nomexMesh.rotation.x = Math.PI / 4 + (on ? 0.035 * Math.sin(T * 1.3) : 0);                       // Nomex flutters
+  if (on && t - lastCord > 45 && partGroups.cord.visible) {                                                    // shock cord sways
+    lastCord = t; const spec = cordSpec(T);
+    cordMeshes.forEach((m, i) => { m.geometry.dispose(); m.geometry = tubeGeo(spec[i][0], spec[i][1]); });
+  }
+  // motor burn
+  let jx = 0, jy = 0, jz = 0;
+  if (burn) {
+    const e = performance.now() - burn.t0, k = e / burn.dur;
+    if (k >= 1) { burn = null; flame.visible = false; }
+    else {
+      const ramp = Math.min(1, e / 150) * (k > .85 ? (1 - k) / .15 : 1);
+      flame.visible = true; flame.scale.set(ramp * (0.85 + 0.3 * Math.random()), ramp * (0.9 + 0.2 * Math.random()), ramp * (0.9 + 0.2 * Math.random()));
+      jy = (Math.random() - .5) * 1.6 * ramp; jz = (Math.random() - .5) * 1.6 * ramp; jx = (Math.random() - .5) * .8 * ramp;
+      const o = new THREE.Vector3(L + 10, 0, 0);
+      for (let i = 0; i < 2; i++) emit(o.clone().add(new THREE.Vector3(60 + Math.random() * 40, (Math.random() - .5) * 14, (Math.random() - .5) * 14)),
+        new THREE.Vector3(260 + Math.random() * 220, (Math.random() - .5) * 90, (Math.random() - .5) * 90), 1.3, 22, 100, i ? 0xcfcfcf : 0xffa860, .38, false);
+    }
+  }
+  world.position.set(-L / 2 + jx, jy, jz);
+  fxStep(dt);
+}
+
+// ---------- per-frame build update ----------
+function buildStep(dt, t) {
+  let moving = false;
+  for (const id of Object.keys(partGroups)) {
+    const tg = target[id], r = reveal[id];
+    if (r !== tg) { moving = true; reveal[id] = r + Math.sign(tg - r) * Math.min(Math.abs(tg - r), dt / 0.95); refreshPart(id); }
+  }
+  if (build.on) {
+    pulse = 0.16 + 0.14 * Math.sin(t / 1000 * 4.2);
+    if (build.step > 0) STEPS[build.step].ids.forEach(id => { if (reveal[id] >= 1) refreshPart(id); });
+    printLabels.forEach(o => o.visible = $('tint').checked && partGroups[o.userData.id].visible && reveal[o.userData.id] >= 1);
+    if (build.play && !moving) { build.playT += dt; if (build.playT > 5.2) { if (build.step < STEPS.length - 1) setStep(build.step + 1); else { build.play = false; renderStepUI(); } } }
+  }
+  if (moving || build.on || burn || anim == null) applyOffsets();
+}
+
 // start
 refreshMaterials(); applyOffsets();
 updateOffset(); camera.position.copy(ISO.clone().multiplyScalar(fitDist() * 1.12)); controls.target.set(0, 0, 0);
 const ease = k => k < .5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;
+let lastT = performance.now();
 renderer.setAnimationLoop(t => {
+  const dt = Math.min((t - lastT) / 1000, 0.1); lastT = t;
+  buildStep(dt, t); liveStep(t, dt);
   if (tween) {
     const k = Math.min((performance.now() - tween.t0) / tween.ms, 1), e = ease(k);
     camera.position.lerpVectors(tween.p0, tween.p1, e); controls.target.lerpVectors(tween.c0, tween.c1, e);
