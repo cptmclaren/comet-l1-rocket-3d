@@ -473,7 +473,7 @@ const cordSpec = (t = 0) => {
   const fold = [];
   for (let i = 0; i <= n; i++) { const x = a + 4 + (b - a - 8) * i / n; fold.push([x, (i % 2 ? 1 : -1) * 26 + 2 * w(i), -6 + (i % 3) * 6 + 3 * w(i + 3, 1.3)]); }
   const r1 = [[ub[1] - 3, 0, 0], [ub[1] + 8, 4 * w(1), -30 + 5 * w(2)], [st('chute')[1], 3 * w(3), -36 + 4 * w(4)], [a + 4, -26, -6]];
-  const r2 = [[b - 4, 26, 0], [b + 15, 10 + 3 * w(5), 30 + 5 * w(6)], [ih[0] - 10, 3 * w(7), IHZ - 6 + 4 * w(8)], [ih[0] + 7, 0, IHZ]];
+  const r2 = [[b - 4, 26, 0], [b + 15, 10 + 3 * w(5), 30 + 5 * w(6)], [ih[0] - 10, 3 * w(7), -IHZ + 6 + 4 * w(8)], [ih[0] + 7, 0, -IHZ]];
   return [[fold, 3.2], [r1, 2.2], [r2, 2.2]];
 };
 const tubeGeo = (points, radius) => new THREE.TubeGeometry(new THREE.CatmullRomCurve3(points.map(p => new THREE.Vector3(...p)), false, 'catmullrom', 0.2), Math.max(24, points.length * 12), radius, 10, false);
@@ -487,7 +487,7 @@ const tubeGeo = (points, radius) => new THREE.TubeGeometry(new THREE.CatmullRomC
   const eye = new THREE.Mesh(new THREE.TorusGeometry(7, 2.2, 10, 28), metal(col('ihook'))); eye.position.set(a + 7, 0, 0); eye.rotation.x = Math.PI / 2; meshes.push(eye);
   const sh = new THREE.Mesh(new THREE.CylinderGeometry(2.4, 2.4, cr[1] + 8 - (a + 13), 14), metal(col('ihook'))); sh.rotation.z = Math.PI / 2; sh.position.set((a + 13 + cr[1] + 8) / 2, 0, 0); meshes.push(sh);
   for (const x of [cr[0] - 2, cr[1] + 2]) { const nut = new THREE.Mesh(new THREE.CylinderGeometry(4.6, 4.6, 3.5, 6), metal('#aab1b9')); nut.rotation.z = Math.PI / 2; nut.position.set(x, 0, 0); meshes.push(nut); }
-  meshes.forEach(m => m.position.z += IHZ);   // through the ring's solid part, beside the motor tube (not on the axis)
+  meshes.forEach(m => m.position.z -= IHZ);   // through the ring's solid part, beside the motor tube (not on the axis)
   add('ihook', ...meshes);
 }
 // ballast B (only if the design has it)
@@ -953,7 +953,7 @@ function noteAt(group, x, y, z, txt, cls) {
   set.motor.push(noteAt(g, a + 125, RO + 60, 0, 'Propellant grains'));
   set.motor.push(noteAt(g, b - 14, -RO - 90, 0, 'Nozzle'));
   set.motor.push(noteAt(g, b - 1, -RO - 125, 0, 'Thrust ring'));
-  set.hook.push(noteAt(h, st('ihook')[0] + 7, RO + 55, IHZ, 'I-hook (on forward ring)', 'prn'));
+  set.hook.push(noteAt(h, st('ihook')[0] + 7, RO + 55, -IHZ, 'I-hook (on forward ring)', 'prn'));
   notes.set = set;
 }
 function updateNotes() {
