@@ -242,7 +242,7 @@ const STEPS = [
    text: 'The fin-can core is built on the bench, outside the body tube. Cut the 29 mm motor-mount tube to 9½ in (241.3 mm) and sand the ends square. Thrust travels motor → tube → rings and fins → body.',
    tip: 'Dry-fit your motor case in it before anything is glued.'},
   {t: 'Forward ring + I-hook', ids: ['ihook', 'crF'], from: 'fore', d: 200,
-   text: 'Pass the I-hook through the forward centering ring, put a nut and washer on each side, and epoxy it. Then epoxy the ring on the motor tube near its forward end. The recovery cord clips to this hook, so this joint takes the parachute shock.',
+   text: 'Pass the I-hook through the solid part of the forward centering ring, off to one side of the motor-tube hole (the motor will sit in the middle), put a nut and washer on each side, and epoxy it. Then epoxy the ring on the motor tube near its forward end. The recovery cord clips to this hook, so this joint takes the parachute shock.',
    tip: 'The eye of the hook faces forward, toward the nose.'},
   {t: 'Mid + aft centering rings', ids: ['crM', 'crA'], from: 'aft', d: 220,
    text: 'Epoxy the mid ring and the aft ring on the motor tube. The fin tabs will sit between these two rings, so use the fin slots you will cut in the body tube as the guide for spacing. Keep both rings square to the tube.',
@@ -355,6 +355,7 @@ function tubeAlong(points, radius, color, o) {
 const metal = c => mat(c, {rough: 0.35, metal: 0.85});
 
 // ---------- build parts ----------
+const IHZ = (R.r_mmt_o + RI) / 2 - 2;   // I-hook radial offset: in the forward ring's annulus, beside the motor tube
 const partGroups = {};      // id -> THREE.Group
 const SKIN = new Set(['nose', 'upper', 'middle', 'lower']);
 const CUTTABLE = new Set(['nose', 'upper', 'middle', 'lower', 'cpl1', 'cpl2', 'mmt', 'crF', 'crM', 'crA', 'bulkhead', 'retainer', 'motor']);
@@ -472,7 +473,7 @@ const cordSpec = (t = 0) => {
   const fold = [];
   for (let i = 0; i <= n; i++) { const x = a + 4 + (b - a - 8) * i / n; fold.push([x, (i % 2 ? 1 : -1) * 26 + 2 * w(i), -6 + (i % 3) * 6 + 3 * w(i + 3, 1.3)]); }
   const r1 = [[ub[1] - 3, 0, 0], [ub[1] + 8, 4 * w(1), -30 + 5 * w(2)], [st('chute')[1], 3 * w(3), -36 + 4 * w(4)], [a + 4, -26, -6]];
-  const r2 = [[b - 4, 26, 0], [b + 15, 10 + 3 * w(5), 30 + 5 * w(6)], [ih[0] - 10, 3 * w(7), 18 + 4 * w(8)], [ih[0] + 4, 0, 0]];
+  const r2 = [[b - 4, 26, 0], [b + 15, 10 + 3 * w(5), 30 + 5 * w(6)], [ih[0] - 10, 3 * w(7), IHZ - 6 + 4 * w(8)], [ih[0] + 7, 0, IHZ]];
   return [[fold, 3.2], [r1, 2.2], [r2, 2.2]];
 };
 const tubeGeo = (points, radius) => new THREE.TubeGeometry(new THREE.CatmullRomCurve3(points.map(p => new THREE.Vector3(...p)), false, 'catmullrom', 0.2), Math.max(24, points.length * 12), radius, 10, false);
@@ -486,6 +487,7 @@ const tubeGeo = (points, radius) => new THREE.TubeGeometry(new THREE.CatmullRomC
   const eye = new THREE.Mesh(new THREE.TorusGeometry(7, 2.2, 10, 28), metal(col('ihook'))); eye.position.set(a + 7, 0, 0); eye.rotation.x = Math.PI / 2; meshes.push(eye);
   const sh = new THREE.Mesh(new THREE.CylinderGeometry(2.4, 2.4, cr[1] + 8 - (a + 13), 14), metal(col('ihook'))); sh.rotation.z = Math.PI / 2; sh.position.set((a + 13 + cr[1] + 8) / 2, 0, 0); meshes.push(sh);
   for (const x of [cr[0] - 2, cr[1] + 2]) { const nut = new THREE.Mesh(new THREE.CylinderGeometry(4.6, 4.6, 3.5, 6), metal('#aab1b9')); nut.rotation.z = Math.PI / 2; nut.position.set(x, 0, 0); meshes.push(nut); }
+  meshes.forEach(m => m.position.z += IHZ);   // through the ring's solid part, beside the motor tube (not on the axis)
   add('ihook', ...meshes);
 }
 // ballast B (only if the design has it)
@@ -524,11 +526,21 @@ if (PART.ballastB) {
 }
 // motor + retainer
 {
-  const [a, b] = st('motor'), rr = R.r_mmt_i - 0.3;
-  const prof = [[0, a], [rr, a], [rr, b - 6], [rr - 3, b], [9, b], [6.5, b - 18], [5, b - 18], [5, b - 20], [0, b - 20]];
-  const m = new THREE.Mesh(lathe(prof), mat(col('motor'), {rough: 0.4, metal: 0.4}));
-  const band = new THREE.Mesh(ring(rr + 0.05, rr + 0.25, a + 60, a + 140), mat('#d24a2a', {rough: 0.6}));
-  add('motor', m, band);
+  const [a, b] = st('motor'), rr = R.r_mmt_i - 0.3, parts = [];
+  const P = (geo, color, o = {}, alpha = 1, keep = true) => { const m = new THREE.Mesh(geo, mat(color, o)); m.userData.alpha = alpha; m.userData.keep = keep; return m; };
+  parts.push(P(ring(rr - 0.9, rr, a, b - 2.4), '#b9c0c8', {rough: 0.35, metal: 0.85}, 0.3, false));            // aluminum case wall (see-through)
+  parts.push(P(ring(rr - 0.9, rr + 0.3, a + 60, a + 140), '#d24a2a', {rough: 0.6}, 0.85));                    // label band
+  parts.push(P(disk(rr - 0.5, a, a + 10), '#c4cad1', {rough: 0.3, metal: 0.9}));                                // forward closure
+  parts.push(P(ring(rr - 0.9, rr + 0.35, a + 12, a + 14.5), '#111', {rough: 0.8}));                              // O-ring
+  parts.push(P(disk(9.5, a + 10, a + 22), '#d9532b', {rough: 0.7}));                                            // ejection charge
+  parts.push(P(disk(6, a + 22, a + 40), '#2b2b2f', {rough: 0.8}));                                              // delay element
+  parts.push(P(ring(0, rr - 0.9, a + 40, a + 42), '#8a6a45', {rough: 0.8}, 0.6));                               // forward insulator
+  parts.push(P(ring(rr - 2.2, rr - 0.9, a + 42, b - 27), '#8a6a45', {rough: 0.8}, 0.55));                       // phenolic liner
+  for (let i = 0; i < 3; i++) parts.push(P(ring(4.2, rr - 2.2, a + 42 + i * 56, a + 42 + i * 56 + 55), '#4b45a0', {rough: 0.7})); // propellant grains
+  parts.push(P(ring(10.5, rr - 0.9, b - 27, b - 3), '#aeb6bf', {rough: 0.35, metal: 0.85}));                     // aft closure
+  parts.push(P(lathe([[7, b - 27], [10.5, b - 27], [10.5, b - 2], [8.4, b], [4.4, b - 12], [7, b - 27]]), '#1a1a1c', {rough: 0.9}));  // graphite nozzle
+  parts.push(P(ring(rr, 16.3, b - 2.4, b - 0.2), '#c4cad1', {rough: 0.3, metal: 0.9}));                          // thrust ring
+  add('motor', ...parts);
   const [c, d] = st('retainer');
   const rp = [[R.r_mmt_o - 0.2, c], [18, c], [18, d], [9.5, d], [9.5, d - 2.5], [R.r_mmt_o - 0.2, d - 2.5]];
   add('retainer', new THREE.Mesh(lathe(rp), mat(col('retainer'), {rough: 0.3, metal: 0.9})));
@@ -626,7 +638,7 @@ function refreshPart(id) {
     if (!m.isMesh) return; const M = m.material, base = M.userData.base;
     let o = SKIN.has(id) ? Math.max(op, 0.06) : (id === 'cpl1' || id === 'cpl2') ? Math.min(1, op + 0.3) : 1;
     if (iso && selected && id !== selected) o = Math.min(o, 0.08);
-    o *= rv;
+    o *= rv * (m.userData.alpha ?? 1);
     M.opacity = o; M.depthWrite = o > 0.6;
     M.clippingPlanes = cut && CUTTABLE.has(id) ? [clip] : null;
     if (tint && !m.userData.keep) M.color.set(MAKE[m.userData.make || MADE[id] || 'buy'].color); else M.color.copy(base.color);
@@ -663,6 +675,10 @@ function buildList() {
   }
 }
 buildList();
+const EXTRA = {
+  motor: ['Anatomy (rough cutaway)', 'Front closure with O-ring, ejection charge and delay element, propellant grains in a liner, then the aft closure with graphite nozzle and thrust ring. Internal sizes and grain count are illustrative, not from the AeroTech drawing. The shock cord is <b>not</b> attached to the motor: it ties to the I-hook on the forward centering ring, just ahead of the motor’s front end. Turn on Half-section cut to see inside.'],
+  ihook: ['Where it sits', 'The hook goes through the solid part of the forward centering ring, off to one side of the motor tube (it cannot be on the axis, because the motor is there). Its eye faces forward, ahead of the motor’s front closure.'],
+};
 function showInfo(id) {
   const p = PART[id], box = document.getElementById('info');
   const [a, b] = p.st, len = b - a;
@@ -675,7 +691,7 @@ function showInfo(id) {
     ${p.mass ? `<b>Mass</b><span>${p.mass.toFixed(1)} g</span>` : ''}</div>
     <div class="sec">What it is</div><p>${p.what}</p>
     <div class="sec">Why it's there</div><p>${p.why}</p>
-    <div class="sec">How it's mounted · load path</div><p>${p.how}</p>`;
+    <div class="sec">How it's mounted · load path</div><p>${p.how}</p>${EXTRA[id] ? `<div class="sec">${EXTRA[id][0]}</div><p>${EXTRA[id][1]}</p>` : ''}`;
   box.classList.add('show');
 }
 function select(id, fly) {
@@ -919,9 +935,38 @@ function liveStep(t, dt) {
   fxStep(dt);
 }
 
+
+// ---------- motor / I-hook callouts ----------
+const notes = [];
+function noteAt(group, x, y, z, txt, cls) {
+  const d = document.createElement('div'); d.className = 'lbl ' + (cls || ''); d.textContent = txt;
+  const o = new CSS2DObject(d); o.position.set(x, y, z); o.visible = false; group.add(o);
+  const l = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(x, y > 0 ? Math.min(y, 1) : 0, z), new THREE.Vector3(x, y, z)]), new THREE.LineBasicMaterial({color: 0x9fb0c8, depthTest: false, transparent: true, opacity: .7}));
+  l.renderOrder = 9; l.visible = false; group.add(l); notes.push({o, l, group});
+  return {o, l};
+}
+{
+  const [a, b] = st('motor'), g = partGroups.motor, h = partGroups.ihook;
+  const set = {motor: [], hook: []};
+  set.motor.push(noteAt(g, a + 5, RO + 95, 0, 'Forward closure'));
+  set.motor.push(noteAt(g, a + 31, RO + 135, 0, 'Ejection charge + delay'));
+  set.motor.push(noteAt(g, a + 125, RO + 60, 0, 'Propellant grains'));
+  set.motor.push(noteAt(g, b - 14, -RO - 90, 0, 'Nozzle'));
+  set.motor.push(noteAt(g, b - 1, -RO - 125, 0, 'Thrust ring'));
+  set.hook.push(noteAt(h, st('ihook')[0] + 7, RO + 55, IHZ, 'I-hook (on forward ring)', 'prn'));
+  notes.set = set;
+}
+function updateNotes() {
+  const fin = build.on && STEPS[build.step].final && reveal.motor >= 1;
+  const mo = (selected === 'motor' || hovered === 'motor' || fin) && partGroups.motor.visible && amount < 0.02;
+  const hk = (mo || selected === 'ihook' || selected === 'crF') && partGroups.ihook.visible && amount < 0.02;
+  notes.forEach(n => { const on = (n.group === partGroups.ihook ? hk : mo); n.o.visible = on; n.l.visible = on; });
+}
+
 // ---------- per-frame build update ----------
 function buildStep(dt, t) {
   let moving = false;
+  updateNotes();
   for (const id of Object.keys(partGroups)) {
     const tg = target[id], r = reveal[id];
     const sa = stageAmt[id], stg = stageTgt[id];
